@@ -18,6 +18,12 @@ const useStyles = makeStyles((theme) => ({
 		justifyContent: 'flex-end',
 		"& > button": {
 			marginLeft: "0.5rem"
+		},
+		"&:first-child": {
+			marginBottom: "0.5rem"
+		},
+		"&:last-child": {
+			marginTop: "0.5rem"
 		}
 	},
 	filterMainSection: {
@@ -25,15 +31,13 @@ const useStyles = makeStyles((theme) => ({
 		flexDirection: "column"
 	},
 	filterMainSubSection: {
-		width: "100%",
+		flexGrow: 1,
 		display: "flex",
 		flexDirection: "row",
 		justifyContent: "space-between",
-		marginTop: "5px",
-		marginBottom: "5px"
+		margin: "5px"
 	},
 	formControl: {
-		minWidth: 120,
 		display: "flex",
 		flexDirection: "column",
 		justifyContent: "center",
@@ -100,8 +104,6 @@ function FilterModal(props) {
 									endDate={endDate}
 									onChangeEndDate={onChangeEndDate}
 								/>
-							</div>
-							<div className={classes.filterMainSubSection}>
 								<FormControl
 									variant="outlined"
 									className={classes.formControl}
@@ -122,15 +124,6 @@ function FilterModal(props) {
 										}
 									</Select>
 								</FormControl>
-								<FormControl
-									className={classes.formControl}
-								>
-									<TextField
-										label="Filter by content"
-										variant="outlined"
-										size="small"
-									/>
-								</FormControl>
 							</div>
 							<div className={classes.filterMainSubSection}>
 								<FormControl className={classes.formControl}>
@@ -149,6 +142,15 @@ function FilterModal(props) {
 											})
 										}
 									</RadioGroup>
+								</FormControl>
+								<FormControl
+									className={classes.formControl}
+								>
+									<TextField
+										label="Filter by content"
+										variant="outlined"
+										size="small"
+									/>
 								</FormControl>
 							</div>
 							<div className={classes.filterMainSubSection}>
