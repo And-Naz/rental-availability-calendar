@@ -1,8 +1,10 @@
-import SelectBy from "../constants/SelectBy";
+import SelectBy, { OrdersType } from "../constants/SelectBy";
 import OrderStatuses from "../constants/OrderStatuses";
-import ErrorsOfRequestInstance from "../constants/ErrorsOfRequestInstance";
+import ErrorsOfRequest from "../constants/ErrorsOfRequest";
+import StatusesOfRequest from "../constants/StatusesOfRequest";
 class Request {
-	static Errors = ErrorsOfRequestInstance;
+	static Errors = ErrorsOfRequest;
+	static Statuses = StatusesOfRequest
 	static CheckingMiddleweare = function (...callbacks) {
 		return callbacks.reduce((acc, cb, index, arr) => {
 			const retVal = cb(acc, index, arr)
@@ -11,15 +13,12 @@ class Request {
 			}
 		}, []);
 	}
-	#errorsStack = [];
-	get ErrorsStack() { return [...this.#errorsStack] }
-	get isValid() { return this.ErrorsStack.length === 0 }
-	#validate(callbacks, errors) {
-		const indexesOfErrors = Request.CheckingMiddleweare(callbacks);
-		if (indexesOfErrors.length) {
+	#validate = (callbacks, errors) => {
+		const indexesOfErrors = Request.CheckingMiddleweare(...callbacks);
+		if (Array.isArray(indexesOfErrors) && indexesOfErrors.length) {
 			const errors = indexesOfErrors.map(index => errors[index])
-				.filter(er => !errors.includes(er))
-			this.#errorsStack = this.#errorsStack.concat(errors)
+				.filter(er => !errors.includes(er));
+			this.#errorsStack = this.#errorsStack.concat(errors);
 			return false
 		} else {
 			this.#errorsStack = this.#errorsStack.filter(es => !errors.includes(es));
@@ -75,15 +74,41 @@ class Request {
 		);
 		return this.isValid;
 	}
+	#takeCacheInfo = (start, end) => {
+		let requestStart = start;
+		let requestEnd = end;
+		let inCacheExistsChunck = false;
+		let inCacheExistsAll = false
+		let cacheStart = start;
+		let cacheEnd = end;
+		let needDoRequest = true
+		if (end <= this.#lastLoadEnd) {
+			inCacheExistsAll = true;
+			needDoRequest = false;
+		}
+		if (!inCacheExistsAll && start <= this.#lastLoadEnd && end > this.#lastLoadEnd) {
+			inCacheExistsChunck = true;
+			cacheEnd = this.#lastLoadEnd;
+			requestStart = this.#lastLoadEnd + 1;
+			requestEnd = end;
+			if (requestStart > requestEnd) { throw Request.Errors.InvalidDataPosition } /* TODO: test this part */
+		}
+		return { requestStart, requestEnd, inCacheExistsChunck, inCacheExistsAll, cacheStart, cacheEnd, needDoRequest }
+	}
+	#errorsStack = [];
+	#status = Request.Statuses.Empty;
 	#api = null;
-	#loadedRecords = [];
-	#selectBy = SelectBy.ItemsType;
+	#records = new Map();
+	#selectBy = SelectBy.OrdersType;
 	#orderStatus = OrderStatuses.NotShipped;
 	#lastLoadStart = null;
 	#lastLoadEnd = null;
 	#startDate = Date.Current;
 	#endDate = Date.Current.DayAddedDate(31);
-	get LoadedRecords() { return this.#loadedRecords }
+	get Status() { return this.#status; };
+	get ErrorsStack() { return [...this.#errorsStack] }
+	get isValid() { return this.ErrorsStack.length === 0 }
+	get Records() { return [...this.#records.values()] }
 	get SelectBy() { return this.#selectBy; };
 	set SelectBy(value) {
 		this.#validate([this.#validateSelectedBy(value)], [Request.Errors.InvalidSelectBy])
@@ -119,9 +144,10 @@ class Request {
 		this.#api = api;
 	};
 	clean() {
-		this.#loadedRecords = [];
+		this.#records = new Map();
 		this.#lastLoadStart = null;
 		this.#lastLoadEnd = null;
+		this.#status = Request.Statuses.Empty;
 	}
 	Update({ selectBy, orderStatus, startDate, endDate, steps }) {
 		selectBy && (this.SelectBy = selectBy);
@@ -131,25 +157,55 @@ class Request {
 		steps && (this.Steps = steps);
 	}
 	RecordsTotalCount = async () => {
+		this.#status = Request.Statuses.InProcess;
 		if (!this.#validateAll()) {
+			this.#status = Request.Statuses.Rest;
 			throw new Error(this.ErrorsStack.join(" "))
 		}
-		return this.#api.recordsTotalCount(this.#selectBy, this.#orderStatus, start, end)
+		const data = await this.#api.recordsTotalCount(this.SelectBy, this.OrderStatus, this.StartDate, this.EndDate)
+		this.#status = Request.Statuses.Rest;
+		return data
 	}
-	LoadRecords = async (
+	Load = async (
 		start = (!this.#lastLoadStart) ? this.#api.initStart : this.#lastLoadStart + this.#api.steps,
 		end = (!this.#lastLoadEnd) ? this.#api.initEnd : this.#lastLoadEnd + this.#api.steps
 	) => {
+		this.#status = Request.Statuses.InProcess;
 		if (!this.#validateAll()) {
+			this.#status = Request.Statuses.Rest;
 			throw new Error(this.ErrorsStack.join(" "))
 		}
-		const newData = await this.#api.loadRecords(this.#selectBy, this.#orderStatus, start, end);
-		this.#loadedRecords = this.#loadedRecords.concat(newData);
+		let newData = [];
+		const cacheInfo = this.#takeCacheInfo(start, end)
+		if (cacheInfo.inCacheExistsChunck) {
+			newData = newData.concat(this.Records.slice(cacheInfo.cacheStart, cacheInfo.cacheEnd))
+		}
+		if (cacheInfo.needDoRequest) {
+			let requestData = await this.#api.loadRecords(this.SelectBy, this.OrderStatus, this.StartDate, this.EndDate, cacheInfo.requestStart, cacheInfo.requestEnd);
+			newData = newData.concat(requestData)
+		}
+		if (!cacheInfo.inCacheExistsAll && Array.isArray(newData) && !newData.length) {
+			const totalCount = await this.#api.recordsTotalCount(this.SelectBy, this.OrderStatus, this.StartDate, this.EndDate)
+			if (totalCount === this.#lastLoadEnd + 1) {
+				this.#status = Request.Statuses.Error;
+				throw Request.Errors.InvalidServerResponding;
+			}
+			this.#status = Request.Statuses.Finished;
+			return false
+		}
+		if (!cacheInfo.inCacheExistsAll) {
+			let key = null;
+			for (let i = 0; i < newData.length; i++) {
+				key = this.SelectBy === OrdersType ? newData[i].OrderNbr : newData[i].InventoryCD
+				if (!this.#records.has(key)) {
+					this.#records.set(key, newData[i]);
+				}
+			}
+		}
 		this.#lastLoadStart = start;
 		this.#lastLoadEnd = end;
-		return this.#loadedRecords;
+		this.#status = Request.Statuses.Rest;
+		return cacheInfo.inCacheExistsAll ? true : newData.length > 0;
 	}
-
 };
-
 export default Request;
