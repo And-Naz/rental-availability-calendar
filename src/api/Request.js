@@ -1,4 +1,4 @@
-import SelectBy, { OrdersType } from "../constants/SelectBy";
+import SelectBy from "../constants/SelectBy";
 import OrderStatuses from "../constants/OrderStatuses";
 import ErrorsOfRequest from "../constants/ErrorsOfRequest";
 import StatusesOfRequest from "../constants/StatusesOfRequest";
@@ -196,7 +196,7 @@ class Request {
 		if (!cacheInfo.inCacheExistsAll) {
 			let key = null;
 			for (let i = 0; i < newData.length; i++) {
-				key = this.SelectBy === OrdersType ? newData[i].OrderNbr : newData[i].InventoryCD
+				key = this.SelectBy === SelectBy.OrdersType ? newData[i].OrderNbr : newData[i].InventoryCD
 				if (!this.#records.has(key)) {
 					this.#records.set(key, newData[i]);
 				}
