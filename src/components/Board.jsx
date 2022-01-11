@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme) => ({
 function Board(props) {
 	const classes = useStyles();
 	const [dataForDrow, /*setDataForDrow*/] = useState([])
-	const [open, setOpen] = useState(false);
+	const [open, setOpen] = useState(true);
 	const toggleFilterVisibility = useCallback(() => setOpen(prevState => !prevState), []);
 	console.log("Render: Board");
 	return (

@@ -1,8 +1,8 @@
 import * as Types from "../constants/ReduxActionTypes";
 import {Synchronous, Asynchronous} from "../helpers/ReduxActionsGenerator"
-export const setSelectBy = Synchronous(Types.SetSelectedBy)
-export const setOrderStatus = Synchronous(Types.SetOrderStatus)
-export const setStartDate = Synchronous(Types.SetStartDate)
-export const setEndDate = Synchronous(Types.SetEndDate)
-export const setRecords = Asynchronous(Types.SetRecords)
-export const setSelectedRecords = Asynchronous(Types.SetSelectedBy)
+export const actionSetSelectBy           = Synchronous(Types.SetSelectedBy)
+export const actionSetOrderStatus        = Synchronous(Types.SetOrderStatus)
+export const actionSetStartDate          = Synchronous(Types.SetStartDate)
+export const actionSetEndDate            = Synchronous(Types.SetEndDate)
+export const actionSetRecords            = Asynchronous(Types.SetRecords)
+export const actionSetSelectedRecords    = Asynchronous(Types.SetSelectedBy)

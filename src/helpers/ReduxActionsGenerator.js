@@ -1,9 +1,9 @@
 import ReduxActionModel from "../models/ReduxActionModel"
 export function Synchronous(type) {
-    return (value) => new ReduxActionModel(type, value)
+    return (value) => ReduxActionModel(type, value)
 }
 export function Asynchronous(type) {
     return (promise) => (dispatch) => {
-        promise.then(value => dispatch(new ReduxActionModel(type, value)))
+        promise.then(value => dispatch(ReduxActionModel(type, value)))
     }
 }

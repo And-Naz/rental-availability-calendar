@@ -1,7 +1,3 @@
-import { memo } from 'react';
-import { useSelector } from 'react-redux';
-import * as SelectBy from "../constants/SelectBy"
-import * as OrderStatuses from "../constants/OrderStatuses"
 import {
 	Backdrop, Box, Modal, Fade,
 	Button, FormControl, FormLabel,
@@ -12,6 +8,12 @@ import { makeStyles } from '@mui/styles';
 import DateSelector from "./DateSelector";
 import ByOrdersList from './ByOrdersList';
 import ByItemsList from './ByItemsList';
+import { memo, useCallback } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import * as SelectBy from "../constants/SelectBy"
+import * as OrderStatuses from "../constants/OrderStatuses"
+import {actionSetSelectBy, actionSetOrderStatus} from "../store/ReduxActions"
+
 const useStyles = makeStyles((theme) => ({
 	filterButtonSection: {
 		height: '100%',
@@ -65,12 +67,14 @@ const boxStyle = {
 	display: 'flex',
 	flexDirection: 'column'
 };
-const onChangeSelectBy = Function.prototype;
-const onChangeOrderStatus = Function.prototype;
+
 function FilterModal(props) {
 	const classes = useStyles()
 	console.log("Render: FilterModal");
 	const { selectBy, orderStatus } = useSelector(state => state.filter)
+	const dispatch = useDispatch()
+	const onChangeSelectBy = useCallback((e) => dispatch(actionSetSelectBy(e.target.value)), []);
+	const onChangeOrderStatus = useCallback((e) => dispatch(actionSetOrderStatus(e.target.value)), []);
 	return (
 		<div>
 			<Modal
@@ -151,8 +155,8 @@ function FilterModal(props) {
 							</div>
 							<div className={classes.filterMainSubSection}>
 								{
-									((sb) => {
-										switch (sb) {
+									(() => {
+										switch (selectBy) {
 											case SelectBy.OrdersType:
 												return <ByOrdersList />;
 											case SelectBy.ItemsType:
@@ -160,7 +164,7 @@ function FilterModal(props) {
 											default:
 												return null;
 										}
-									})(selectBy)
+									})()
 								}
 							</div>
 						</div>
