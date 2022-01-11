@@ -1,5 +1,5 @@
 import * as Types from "../constants/ReduxActionTypes";
-import {Synchronous, Asynchronous} from "./ReduxActionsGenerator"
+import {Synchronous, Asynchronous} from "../helpers/ReduxActionsGenerator"
 export const setSelectBy = Synchronous(Types.SetSelectedBy)
 export const setOrderStatus = Synchronous(Types.SetOrderStatus)
 export const setStartDate = Synchronous(Types.SetStartDate)
