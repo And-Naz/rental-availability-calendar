@@ -1,4 +1,4 @@
-import { SetRecords } from "./ReduxActionTypes";
+import { SetRecords } from "../../constants/ReduxActionTypes";
 const defaultState = new Map();
 const defaultAction = {type: null, payload: null};
 const recordsReducer = (state = defaultState, action = defaultAction) => {

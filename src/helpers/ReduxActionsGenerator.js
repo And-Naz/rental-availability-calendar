@@ -1,4 +1,4 @@
-import ReduxActionModel from "./ReduxActionModel"
+import ReduxActionModel from "../models/ReduxActionModel"
 export function Synchronous(type) {
     return (value) => new ReduxActionModel(type, value)
 }

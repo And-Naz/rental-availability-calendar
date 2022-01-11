@@ -27,16 +27,15 @@ function Board(props) {
 	const classes = useStyles();
 	const [dataForDrow, /*setDataForDrow*/] = useState([])
 	const [open, setOpen] = useState(false);
-	const openFilter = useCallback(() => setOpen(true), []);
-	const closeFilter = useCallback(() => setOpen(false), []);
+	const toggleFilterVisibility = useCallback(() => setOpen(prevState => !prevState), []);
 	console.log("Render: Board");
 	return (
 		<div className={classes.board}>
 			<FilterModal
 				open={open}
-				closeFilter={closeFilter}
+				closeFilter={toggleFilterVisibility}
 			/>
-			<BoardHeader className={classes.header} openFilter={openFilter} />
+			<BoardHeader className={classes.header} openFilter={toggleFilterVisibility} />
 			<BoardBody className={classes.body} dataForDrow={dataForDrow} />
 		</div>
 	);

@@ -1,5 +1,5 @@
-import useRecordsContext from "../hooks/useRecordsContext"
 import { FormControl, TextField } from '@mui/material'
+import { useSelector } from "react-redux"
 const defaults = {
 	formControlVariant: "outlined",
 	formControlClass: "",
@@ -13,7 +13,7 @@ const defaults = {
 	onChange: Function.prototype
 }
 function DateSelector(props) {
-	const { Value } = useRecordsContext()
+	const {startDate, endDate} = useSelector(state => state.filter)
 	console.log("Render: DateSelector");
 	return (
 		<>
@@ -25,12 +25,12 @@ function DateSelector(props) {
 				<TextField
 					label="Start Date"
 					type="date"
-					value={Value?.startDate?.FormatDate("YYYY-MM-DD") || defaults.startDateDefaultValue}
+					value={startDate?.FormatDate("YYYY-MM-DD") || defaults.startDateDefaultValue}
 					variant={props.textFieldVariant || defaults.textFieldVariant}
 					sx={props.textFieldSx || defaults.textFieldSx}
 					size={props.textFieldSize || defaults.textFieldSize}
 					InputLabelProps={props.textFieldInputLabelProps || defaults.textFieldInputLabelProps}
-					onChange={Value?.onChangeStartDate || defaults.onChange}
+					onChange={ defaults.onChange }
 				/>
 			</FormControl>
 			<FormControl
@@ -41,12 +41,12 @@ function DateSelector(props) {
 				<TextField
 					label="End Date"
 					type="date"
-					value={Value?.endDate?.FormatDate("YYYY-MM-DD") || defaults.endDateDefaultValue}
+					value={endDate?.FormatDate("YYYY-MM-DD") || defaults.endDateDefaultValue}
 					variant={props.textFieldVariant || defaults.textFieldVariant}
 					sx={props.textFieldSx || defaults.textFieldSx}
 					size={props.textFieldSize || defaults.textFieldSize}
 					InputLabelProps={props.textFieldInputLabelProps || defaults.textFieldInputLabelProps}
-					onChange={Value?.onChangeEndDate || defaults.onChange}
+					onChange={ defaults.onChange }
 				/>
 			</FormControl>
 		</>

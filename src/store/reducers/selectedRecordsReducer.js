@@ -1,4 +1,4 @@
-import { SetSelectedRecords } from "./ReduxActionTypes";
+import { SetSelectedRecords } from "../../constants/ReduxActionTypes";
 const defaultState = new Map();
 const defaultAction = {type: null, payload: null};
 const selectedRecordsReducer = (state = defaultState, action = defaultAction) => {

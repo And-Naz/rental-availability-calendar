@@ -65,18 +65,12 @@ const boxStyle = {
 	display: 'flex',
 	flexDirection: 'column'
 };
-const onChangeEndDate = Function.prototype;
-const onChangeStartDate = Function.prototype;
 const onChangeSelectBy = Function.prototype;
 const onChangeOrderStatus = Function.prototype;
 function FilterModal(props) {
 	const classes = useStyles()
 	console.log("Render: FilterModal");
-	const { selectBy, orderStatus, startDate, endDate } = useSelector(state => state.filter)
-	console.colorLog(`selectBy: ${selectBy}`, "info")
-	console.colorLog(`orderStatus: ${orderStatus}`, "info")
-	console.colorLog(`startDate: ${startDate}`, "info")
-	console.colorLog(`endDate: ${endDate}`, "info")
+	const { selectBy, orderStatus } = useSelector(state => state.filter)
 	return (
 		<div>
 			<Modal
@@ -105,10 +99,6 @@ function FilterModal(props) {
 							<div className={classes.filterMainSubSection}>
 								<DateSelector
 									formControlClass={classes.formControl}
-									startDate={startDate}
-									onChangeStartDate={onChangeStartDate}
-									endDate={endDate}
-									onChangeEndDate={onChangeEndDate}
 								/>
 								<FormControl
 									variant="outlined"
