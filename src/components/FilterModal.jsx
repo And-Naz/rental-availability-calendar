@@ -1,4 +1,7 @@
 import { memo } from 'react';
+import { useSelector } from 'react-redux';
+import * as SelectBy from "../constants/SelectBy"
+import * as OrderStatuses from "../constants/OrderStatuses"
 import {
 	Backdrop, Box, Modal, Fade,
 	Button, FormControl, FormLabel,
@@ -62,15 +65,18 @@ const boxStyle = {
 	display: 'flex',
 	flexDirection: 'column'
 };
-
+const onChangeEndDate = Function.prototype;
+const onChangeStartDate = Function.prototype;
+const onChangeSelectBy = Function.prototype;
+const onChangeOrderStatus = Function.prototype;
 function FilterModal(props) {
 	const classes = useStyles()
-	const {
-		selectBy, onChangeSelectBy, SelectBy,
-		orderStatus, onChangeOrderStatus, OrderStatuses,
-		startDate, onChangeStartDate, endDate, onChangeEndDate
-	} = props;
 	console.log("Render: FilterModal");
+	const { selectBy, orderStatus, startDate, endDate } = useSelector(state => state.filter)
+	console.colorLog(`selectBy: ${selectBy}`, "info")
+	console.colorLog(`orderStatus: ${orderStatus}`, "info")
+	console.colorLog(`startDate: ${startDate}`, "info")
+	console.colorLog(`endDate: ${endDate}`, "info")
 	return (
 		<div>
 			<Modal
@@ -120,7 +126,7 @@ function FilterModal(props) {
 										className={classes.select}
 									>
 										{
-											SelectBy.list.map(type => <MenuItem key={type.value} value={type.value}>{type.desc}</MenuItem>)
+											Object.keys(SelectBy).map(sbKey => <MenuItem key={sbKey} value={SelectBy[sbKey].value}>{SelectBy[sbKey].desc}</MenuItem>)
 										}
 									</Select>
 								</FormControl>
@@ -130,13 +136,13 @@ function FilterModal(props) {
 									<FormLabel component="span">Order Status</FormLabel>
 									<RadioGroup row value={orderStatus} onChange={onChangeOrderStatus}>
 										{
-											OrderStatuses.list.map(os => {
+											Object.keys(OrderStatuses).map(osKey => {
 												return (
 													<FormControlLabel
-														key={os.value}
-														value={os.value}
+														key={osKey}
+														value={OrderStatuses[osKey].value}
 														control={<Radio color="primary" />}
-														label={os.desc}
+														label={OrderStatuses[osKey].desc}
 													/>
 												)
 											})

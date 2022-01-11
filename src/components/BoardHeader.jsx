@@ -1,4 +1,4 @@
-import { useMemo, memo } from 'react';
+import { memo } from 'react';
 import filterIcons from '../icons/icon-filter.svg'
 import DateSelector from './DateSelector';
 import { AppBar, Toolbar, Button } from '@mui/material';

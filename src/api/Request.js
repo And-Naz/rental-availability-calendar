@@ -1,16 +1,19 @@
-import SelectBy from "../constants/SelectBy";
-import OrderStatuses from "../constants/OrderStatuses";
-import ErrorsOfRequest from "../constants/ErrorsOfRequest";
-import StatusesOfRequest from "../constants/StatusesOfRequest";
+import * as SelectBy from "../constants/SelectBy";
+import * as OrderStatuses from "../constants/OrderStatuses";
+import * as ErrorsOfRequest from "../constants/ErrorsOfRequest";
+import * as StatusesOfRequest from "../constants/StatusesOfRequest";
+const errorsOfRequest = Object.keys(ErrorsOfRequest).reduce((acc, key) => {acc[key] = ErrorsOfRequest[key]; return acc}, {});
+const statusesOfRequest = Object.keys(StatusesOfRequest).reduce((acc, key) => {acc[key] = StatusesOfRequest[key]; return acc}, {});
 class Request {
-	static Errors = ErrorsOfRequest;
-	static Statuses = StatusesOfRequest
+	static Errors = errorsOfRequest
+	static Statuses = statusesOfRequest
 	static CheckingMiddleweare = function (...callbacks) {
 		return callbacks.reduce((acc, cb, index, arr) => {
 			const retVal = cb(acc, index, arr)
 			if (!retVal) {
 				acc.push(index)
 			}
+			return acc
 		}, []);
 	}
 	#validate = (callbacks, errors) => {
@@ -25,16 +28,16 @@ class Request {
 			return true
 		}
 	}
-	#validateSelectedBy = (value) => () => {
-		if (!SelectBy.list.find(sb => value === sb.value)) {
+	#validateSelectedBy = (value) => () => {	
+		if (!Object.keys(SelectBy).find(key => SelectBy[key] === value)) {
 			return false
 		}
 		return true;
 	};
 	#validateOrderStatus = (value) => () => {
-		if (!OrderStatuses.list.find(os => value === os.value)) {
+		if (!Object.keys(OrderStatuses).find(key => OrderStatuses[key] === value)) {
 			return false
-		}
+		}	
 		return true;
 	};
 	#validateStartDate = (value) => () => {

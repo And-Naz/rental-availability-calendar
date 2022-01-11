@@ -1,6 +1,6 @@
 import Request from "./Request";
-import AcuRNT from "./Acumatica/AcuRNT";
-import Static from "./Static"
+import AcuRNT from "./acumatica/AcuRNT";
+import Static from "./static"
 let exportApi = null
 switch (process.env.NODE_ENV) {
 	case "production":
