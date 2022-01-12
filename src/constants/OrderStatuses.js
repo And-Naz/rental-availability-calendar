@@ -1,3 +1,3 @@
-export const Shipped = {value: "1", desc: "Shipped"};
-export const NotShipped = {value: "2", desc: "NotShipped"};
-export const AllOpens = {value: "3", desc: "AllOpens"};
+export const Shipped = {value: "Shipped", desc: "Shipped"};
+export const NotShipped = {value: "NotShipped", desc: "Not Shipped"};
+export const AllOpens = {value: "AllOpens", desc: "All Opens"};

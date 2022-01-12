@@ -1,8 +1,9 @@
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 import FilterModal from './FilterModal';
 import BoardHeader from './BoardHeader'
 import BoardBody from './BoardBody';
 import { makeStyles } from '@mui/styles';
+import useToggle from '../hooks/useToggle';
 
 const useStyles = makeStyles((theme) => ({
 	board: {
@@ -26,16 +27,15 @@ const useStyles = makeStyles((theme) => ({
 function Board(props) {
 	const classes = useStyles();
 	const [dataForDrow, /*setDataForDrow*/] = useState([])
-	const [open, setOpen] = useState(true);
-	const toggleFilterVisibility = useCallback(() => setOpen(prevState => !prevState), []);
+	const [openFilter, setOpenFilter] = useToggle(true);
 	console.log("Render: Board");
 	return (
 		<div className={classes.board}>
 			<FilterModal
-				open={open}
-				closeFilter={toggleFilterVisibility}
+				open={openFilter}
+				closeFilter={setOpenFilter}
 			/>
-			<BoardHeader className={classes.header} openFilter={toggleFilterVisibility} />
+			<BoardHeader className={classes.header} openFilter={setOpenFilter} />
 			<BoardBody className={classes.body} dataForDrow={dataForDrow} />
 		</div>
 	);
