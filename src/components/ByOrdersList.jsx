@@ -1,20 +1,14 @@
-import { useState, useEffect } from "react"
-import api from "../api";
+import useRequestApi from '../hooks/useRequestApi';
 function ByOrdersList(props) {
-	const [list, setList] = useState([]);
-	useEffect(() => {
-		void (async () => {
-			console.log("useLayoutEffect");
-			if (await api.Load()) {
-				setList(api.Records)
-			}
-		})()
-	}, [])
-	console.log("api status: " + api.Status);
+	const {records, totalCount, load, recordsKeysName} = useRequestApi()
+	console.log(totalCount);
+	console.log(records);
 	return (
-		<div>{
-			list.map(elem => <span key={elem.OrderNbr}>{elem.OrderNbr}</span>)
-		}</div>
+		<div>
+			{
+				records.map(d => <p key={d[recordsKeysName[0]]}>{d[recordsKeysName[0]]}</p>)
+			}
+		</div>
 	)
 }
 

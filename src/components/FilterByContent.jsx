@@ -10,7 +10,8 @@ export default function FilterByContent() {
     const setHighPriorityState = val => dispatch(actionSetFilterByContent(val))
     const eventInstanceMutator = (prevState, event) => event.target.value;
     const delay = 300;
-    const [triggeredValue, triggerFunction] = useTimeoutEventHandler(highPriorityState, setHighPriorityState, eventInstanceMutator, delay)
+    const defaultState = "";
+    const [triggeredValue, triggerFunction] = useTimeoutEventHandler(highPriorityState, setHighPriorityState, eventInstanceMutator, delay, defaultState)
     console.log("Render: FilterByContent");
     return (<Input value={triggeredValue} onChange={triggerFunction} label="Filter By Content"/>)
 }

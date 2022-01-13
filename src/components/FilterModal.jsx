@@ -3,14 +3,13 @@ import {
 	Button,
 } from '@mui/material';
 import { makeStyles } from '@mui/styles';
-// import ByOrdersList from './ByOrdersList';
-// import ByItemsList from './ByItemsList';
 import { memo } from 'react';
 import SelectBy from "./SelectBy"
 import OrderStatuses from "./OrderStatuses"
 import StartDate from './StartDate';
 import EndDate from './EndDate';
 import FilterByContent from './FilterByContent';
+import RecordsList from './RecordsList';
 
 const useStyles = makeStyles((theme) => ({
 	filterButtonSection: {
@@ -100,18 +99,7 @@ function FilterModal(props) {
 								<FilterByContent />
 							</div>
 							<div className={classes.filterMainSubSection}>
-								{/* {
-									(() => {
-										switch (selectBy) {
-											case SelectBy.OrdersType:
-												return <ByOrdersList />;
-											case SelectBy.ItemsType:
-												return <ByItemsList />;
-											default:
-												return null;
-										}
-									})()
-								} */}
+								<RecordsList />
 							</div>
 						</div>
 						<div className={classes.filterButtonSection}>

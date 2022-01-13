@@ -2,9 +2,9 @@ import { useState, useCallback, useEffect, useRef } from 'react'
 const defaultValue = null;
 const defaultFunc = v => v;
 const defaultDelay = null;
-export default function useTimeoutEventHandler(value = defaultValue, setValue = defaultFunc, eventInstanceMutator = defaultFunc, delay = defaultDelay) {
+export default function useTimeoutEventHandler(value = defaultValue, setValue = defaultFunc, eventInstanceMutator = defaultFunc, delay = defaultDelay, defaultState = null) {
     
-    const [triggeredValue, setTriggeredValue] = useState("")
+    const [triggeredValue, setTriggeredValue] = useState(defaultState)
     const triggerFunction = useCallback((...args) => setTriggeredValue(prev => eventInstanceMutator(prev, ...args)), [])
 
     const timeoutRef = useRef(null)
@@ -22,6 +22,5 @@ export default function useTimeoutEventHandler(value = defaultValue, setValue = 
             clearTimeout(timeoutRef.current)
         }
     }, [triggeredValue])
-    console.log("useTimeoutEventHandler");
     return [triggeredValue, triggerFunction]
 }
