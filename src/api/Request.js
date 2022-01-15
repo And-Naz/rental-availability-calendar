@@ -99,11 +99,11 @@ class Request {
 		let cacheEnd = end;
 		let inCacheExistsChunck = null;
 		let cacheSize = 0;
-		let totalCount = await this.RecordsTotalCount()
+		this.#totalCount = await this.RecordsTotalCount()
 		if (this.#cache[cacheKey] instanceof Map) {
 			cacheSize = this.#cache[cacheKey].size
 			switch (true) {
-				case cacheSize > 0 && cacheSize <= totalCount:
+				case cacheSize > 0 && cacheSize <= this.#totalCount:
 					if (end <= cacheSize - 1) {
 						inCacheExistsChunck = true
 						needDoRequest = false
@@ -135,7 +135,7 @@ class Request {
 			inCacheExistsChunck = false
 		}
 		return {
-			requestStart, requestEnd, totalCount, needDoRequest,
+			requestStart, requestEnd, needDoRequest,
 			cacheStart, cacheEnd, cacheSize, inCacheExistsChunck
 		}
 	}
@@ -143,7 +143,7 @@ class Request {
 	#status = Request.Statuses.Empty;
 	#apiInterface = null;
 	#cache = {};
-	#count = 0
+	#totalCount = 0
 	#selectBy = SelectBy.OrdersType.value;
 	#orderStatus = OrderStatuses.NotShipped.value;
 	#lastLoadChunckStart = null;
@@ -163,7 +163,7 @@ class Request {
 	get Status() { return this.#status; };
 	get ErrorsStack() { return [...this.#errorsStack] }
 	get isValid() { return this.ErrorsStack.length === 0 }
-	get Count() { return this.#count }
+	get TotalCount() { return this.#totalCount }
 	get SelectBy() { return this.#selectBy; };
 	set SelectBy(value) {
 		this.#validate([this.#validateSelectedBy(value)], [Request.Errors.InvalidSelectBy])
@@ -244,7 +244,7 @@ class Request {
 		if (!fromLoad) {
 			this.#status = Request.Statuses.Rest;
 		}
-		this.#count = data;
+		this.#totalCount = data;
 		return data
 	}
 	Load = async (start, end) => {

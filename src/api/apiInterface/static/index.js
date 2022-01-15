@@ -11,10 +11,10 @@ const staticObject = {
 	initEnd: 99,
 	loadRecords: async function (filter, start = this.initStart, end = this.initEnd) {
 		const keys = this._getKeys(filter)
-		let data = null;
+		let data = [];
 		switch (keys.selectBy) {
 			case OrdersType.value:
-				await new Promise(res => setTimeout(res, 3500))
+				await new Promise(res => setTimeout(res, Math.round(Math.random() * 4) * 1000))
 				data = await this.orders.filter(ord => {
 					return (
 						(AllOpens.value === keys.orderStatus || ord.Status === keys.orderStatus) &&
@@ -27,14 +27,14 @@ const staticObject = {
 				})
 				break;
 			case ItemsType.value:
+				await new Promise(res => setTimeout(res, Math.round(Math.random() * 4) * 1000))
 				data = this.items
 				break;
 			default:
-				data = [];
 				break;
 		}
 		if (data.length) {
-			const tmpData = data.slice(start, end)
+			const tmpData = data.slice(start, end + 1)
 			return tmpData
 		}
 		return data

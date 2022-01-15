@@ -10,20 +10,20 @@ const useStyles = makeStyles((theme) => ({
 	}
 }));
 function Input(props) {
-    const classes = useStyles()
-    return (
-        <FormControl
+	const classes = useStyles()
+	return (
+		<FormControl
 			className={classes.formControl}
-        >
-            <TextField
-                label={props.label || "Input"}
-                variant={props.variant || "outlined"}
-                size={props.size || "small"}
-                value={props.value || ""}
-                onChange={props.onChange || Function.prototype}
-            />
-        </FormControl>
-    )
+		>
+			<TextField
+				label={props.label || "Input"}
+				variant={props.variant || "outlined"}
+				size={props.size || "small"}
+				value={props.value || ""}
+				onChange={props.onChange || Function.prototype}
+			/>
+		</FormControl>
+	)
 }
 
 export default memo(Input);

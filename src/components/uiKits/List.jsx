@@ -1,11 +1,15 @@
-import {memo} from 'react'
+import { useRef, useEffect, useState } from "react";
+function List({ currentRecords, keyName }) {
 
-function List() {
-    return (
-        <div>
-            
-        </div>
-    )
+	return (
+		<ul className="list">
+			{
+				Array.isArray(currentRecords) && currentRecords.length
+					? "Data"
+					: "No Data"
+			}
+		</ul>
+	);
 }
 
-export default memo(List)
+export default List;
