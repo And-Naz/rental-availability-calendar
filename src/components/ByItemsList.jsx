@@ -1,5 +1,14 @@
 import useRequestApi from '../hooks/useRequestApi';
 function ByItemsList(props) {
+	console.log(typeof useRequestApi);
+	// const {records, load, getStatus, getErrorStack} = useRequestApi()
+	// console.log(records);
+	// (async () => {
+	// 	console.log(typeof load);
+	// 	return
+	// 	await load(1,30)
+	// 	console.log(records);
+	// })()
 	return (
 		<div>
 			{

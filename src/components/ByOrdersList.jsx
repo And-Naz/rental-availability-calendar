@@ -1,5 +1,6 @@
 import useRequestApi from '../hooks/useRequestApi';
 function ByOrdersList(props) {
+	const { records, load, getStatus, getErrorStack, getCount } = useRequestApi()
 	return (
 		<div>
 			{
