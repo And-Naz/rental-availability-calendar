@@ -2,8 +2,8 @@ import * as SelectBy from "../constants/SelectBy";
 import * as OrderStatuses from "../constants/OrderStatuses";
 import * as ErrorsOfRequest from "../constants/ErrorsOfRequest";
 import * as StatusesOfRequest from "../constants/StatusesOfRequest";
-const errorsOfRequest = Object.keys(ErrorsOfRequest).reduce((acc, key) => {acc[key] = ErrorsOfRequest[key]; return acc}, {});
-const statusesOfRequest = Object.keys(StatusesOfRequest).reduce((acc, key) => {acc[key] = StatusesOfRequest[key]; return acc}, {});
+const errorsOfRequest = Object.keys(ErrorsOfRequest).reduce((acc, key) => { acc[key] = ErrorsOfRequest[key]; return acc }, {});
+const statusesOfRequest = Object.keys(StatusesOfRequest).reduce((acc, key) => { acc[key] = StatusesOfRequest[key]; return acc }, {});
 class Request {
 	static Errors = errorsOfRequest
 	static Statuses = statusesOfRequest
@@ -28,35 +28,35 @@ class Request {
 		return true
 	}
 	#validateSelectedBy = (value) => () => {
-		if(value === this.SelectBy) return true;
+		if (value === this.SelectBy) return true;
 		if (!Object.keys(SelectBy).find(key => SelectBy[key].value === value)) {
 			return false
 		}
 		return true;
 	};
 	#validateOrderStatus = (value) => () => {
-		if(value === this.OrderStatus) return true;
+		if (value === this.OrderStatus) return true;
 		if (!Object.keys(OrderStatuses).find(key => OrderStatuses[key].value === value)) {
 			return false
-		}	
+		}
 		return true;
 	};
 	#validateStartDate = (value) => () => {
-		if(value === this.StartDate) return true;
+		if (value === this.StartDate) return true;
 		if (!(value instanceof Date) || value > this.EndDate) {
 			return false
 		}
 		return true
 	};
 	#validateEndDate = (value) => () => {
-		if(value === this.EndDate) return true;
+		if (value === this.EndDate) return true;
 		if (!(value instanceof Date) || value < this.StartDate) {
 			return false
 		}
 		return true
 	};
 	#validateFilterByContent = (value) => () => {
-		if(value === this.FilterByContent) return true;
+		if (value === this.FilterByContent) return true;
 		if (!(typeof value === "string" || value instanceof String)) {
 			return false
 		}
@@ -82,13 +82,13 @@ class Request {
 		return this.isValid;
 	}
 	#createCacheKey = () => {
-		const _filter = {...this.Filter};
+		const _filter = { ...this.Filter };
 		_filter.startDate = _filter.startDate.FormatDate("YYYY-MM-DD")
 		_filter.endDate = _filter.endDate.FormatDate("YYYY-MM-DD")
 		delete _filter.filterByContent
 		const key = Object.keys(_filter).reduce((acc, key) => {
 			return acc += `${key}:${_filter[key]}|`
-		}, "").slice(0,-1)
+		}, "").slice(0, -1)
 		return key
 	}
 	#takeCacheInfo = async (cacheKey, start, end) => {
@@ -99,38 +99,35 @@ class Request {
 		let cacheEnd = end;
 		let inCacheExistsChunck = null;
 		let cacheSize = 0;
-		let totalCount = 0
+		let totalCount = await this.RecordsTotalCount()
 		if (this.#cache[cacheKey] instanceof Map) {
 			cacheSize = this.#cache[cacheKey].size
-			if(cacheSize > 0) {
-				totalCount = await this.RecordsTotalCount()
-			}
 			switch (true) {
-				case cacheSize > 0 && cacheSize <= totalCount: 
-					if(end <= cacheSize - 1) {
+				case cacheSize > 0 && cacheSize <= totalCount:
+					if (end <= cacheSize - 1) {
 						inCacheExistsChunck = true
 						needDoRequest = false
 						break;
 					}
-					if(start <= cacheSize - 1) {
+					if (start <= cacheSize - 1) {
 						inCacheExistsChunck = true
 						needDoRequest = true
 						cacheEnd = cacheSize - 1
 						requestStart = cacheSize
 						break;
 					}
-					if(start > cacheSize - 1) {
+					if (start > cacheSize - 1) {
 						inCacheExistsChunck = false
 						needDoRequest = true
 						break;
 					}
-				break;
+					break;
 				/*case cacheSize > totalCount: break;*/
 				/* TODO: Update cache */
 				default:
 					inCacheExistsChunck = false
 					needDoRequest = true
-				break;
+					break;
 			}
 		} else {
 			this.#cache[cacheKey] = new Map()
@@ -166,7 +163,7 @@ class Request {
 	get Status() { return this.#status; };
 	get ErrorsStack() { return [...this.#errorsStack] }
 	get isValid() { return this.ErrorsStack.length === 0 }
-	get Count() {return this.#count}
+	get Count() { return this.#count }
 	get SelectBy() { return this.#selectBy; };
 	set SelectBy(value) {
 		this.#validate([this.#validateSelectedBy(value)], [Request.Errors.InvalidSelectBy])
@@ -191,7 +188,7 @@ class Request {
 		this.#startDate = value;
 		this.cleanPositions()
 	};
-	get FilterByContent() {return this.#filterByContent}
+	get FilterByContent() { return this.#filterByContent }
 	set FilterByContent(value) {
 		this.#validate([this.#validateFilterByContent(value)], [Request.Errors.InvalidFilterByContent])
 		this.#filterByContent = value;
@@ -204,11 +201,11 @@ class Request {
 	constructor(apiInterface, filter = {}) {
 		this.#apiInterface = apiInterface;
 		if (Object.getPrototypeOf(filter) === Object.prototype) {
-			if("selectBy" in filter) {this.SelectBy = filter.selectBy}
-			if("orderStatus" in filter) {this.OrderStatus = filter.orderStatus}
-			if("startDate" in filter) {this.StartDate = filter.startDate}
-			if("endDate" in filter) {this.EndDate = filter.endDate}
-			if("filterByContent" in filter) {this.FilterByContent = filter.filterByContent}
+			if ("selectBy" in filter) { this.SelectBy = filter.selectBy }
+			if ("orderStatus" in filter) { this.OrderStatus = filter.orderStatus }
+			if ("startDate" in filter) { this.StartDate = filter.startDate }
+			if ("endDate" in filter) { this.EndDate = filter.endDate }
+			if ("filterByContent" in filter) { this.FilterByContent = filter.filterByContent }
 		}
 	};
 	cleanPositions() {
@@ -226,7 +223,7 @@ class Request {
 		this.StartDate = filter.startDate
 		this.EndDate = filter.endDate
 		this.FilterByContent = filter.filterByContent
-		if(!this.#validateAll()) {
+		if (!this.#validateAll()) {
 			this.#status = Request.Statuses.Error;
 			throw new Error(this.ErrorsStack.join(" "))
 		}
@@ -234,7 +231,7 @@ class Request {
 	}
 	RecordsTotalCount = async () => {
 		let fromLoad = false
-		if(this.#status === Request.Statuses.InProcess) {
+		if (this.#status === Request.Statuses.InProcess) {
 			fromLoad = true
 		} else {
 			this.#status = Request.Statuses.InProcess
@@ -244,7 +241,7 @@ class Request {
 			throw new Error(this.ErrorsStack.join(" "))
 		}
 		const data = await this.#apiInterface.recordsTotalCount(this.#createCacheKey())
-		if(!fromLoad) {
+		if (!fromLoad) {
 			this.#status = Request.Statuses.Rest;
 		}
 		this.#count = data;
@@ -262,20 +259,21 @@ class Request {
 		const mapKeyName = this.SelectBy === SelectBy.OrdersType.value ? "OrderNbr" : "InventoryCD";
 		const cacheInfo = await this.#takeCacheInfo(currentKey, start, end)
 		if (cacheInfo.inCacheExistsChunck) {
+			console.colorLog("Cache Info", "teal");
 			console.log([...this.#cache[currentKey].values()]);
 			const dataFromCache = [...this.#cache[currentKey].values()].reduce((acc, elem, index) => {
-				if(cacheInfo.cacheStart <= index && index <= cacheInfo.cacheEnd) {
+				if (cacheInfo.cacheStart <= index && index <= cacheInfo.cacheEnd) {
 					acc.push(elem)
 				}
 				return acc
 			}, [])
-			if(dataFromCache.length > 0) {
+			if (dataFromCache.length > 0) {
 				retVal = retVal.concat(dataFromCache)
 			}
 		}
 		if (cacheInfo.needDoRequest) {
 			requestData = await this.#apiInterface.loadRecords(currentKey, cacheInfo.requestStart, cacheInfo.requestEnd);
-			if(requestData.length > 0) {
+			if (requestData.length > 0) {
 				requestData.forEach(d => {
 					this.#cache[currentKey].set(d[mapKeyName], d);
 				})

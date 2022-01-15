@@ -5,7 +5,7 @@ import records from "./reducers/recordsReducer";
 import selectedRecords from "./reducers/selectedRecordsReducer";
 import { composeWithDevTools } from "redux-devtools-extension";
 const rootReducer = combineReducers({
-    filter, records, selectedRecords
+	filter, records, selectedRecords
 })
 const store = createStore(rootReducer, composeWithDevTools(applyMiddleware(thunk)))
 export default store
