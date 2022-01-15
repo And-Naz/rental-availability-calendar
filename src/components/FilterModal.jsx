@@ -1,18 +1,15 @@
 import {
 	Backdrop, Box, Modal, Fade,
-	Button, FormControl, FormLabel,
-	FormControlLabel, RadioGroup, Radio,
-	TextField, InputLabel, Select, MenuItem
+	Button,
 } from '@mui/material';
 import { makeStyles } from '@mui/styles';
-import DateSelector from "./DateSelector";
-import ByOrdersList from './ByOrdersList';
-import ByItemsList from './ByItemsList';
-import { memo, useCallback } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import * as SelectBy from "../constants/SelectBy"
-import * as OrderStatuses from "../constants/OrderStatuses"
-import {actionSetSelectBy, actionSetOrderStatus} from "../store/ReduxActions"
+import { memo } from 'react';
+import SelectBy from "./SelectBy"
+import OrderStatuses from "./OrderStatuses"
+import StartDate from './StartDate';
+import EndDate from './EndDate';
+import FilterByContent from './FilterByContent';
+import RecordsList from './RecordsList';
 
 const useStyles = makeStyles((theme) => ({
 	filterButtonSection: {
@@ -48,10 +45,6 @@ const useStyles = makeStyles((theme) => ({
 		justifyContent: "center",
 		margin: "auto",
 	},
-	select: {
-		color: "#212121",
-		width: 120,
-	}
 }));
 const boxStyle = {
 	position: 'absolute',
@@ -71,10 +64,6 @@ const boxStyle = {
 function FilterModal(props) {
 	const classes = useStyles()
 	console.log("Render: FilterModal");
-	const { selectBy, orderStatus } = useSelector(state => state.filter)
-	const dispatch = useDispatch()
-	const onChangeSelectBy = useCallback((e) => dispatch(actionSetSelectBy(e.target.value)), []);
-	const onChangeOrderStatus = useCallback((e) => dispatch(actionSetOrderStatus(e.target.value)), []);
 	return (
 		<div>
 			<Modal
@@ -101,71 +90,16 @@ function FilterModal(props) {
 						</div>
 						<div className={classes.filterMainSection}>
 							<div className={classes.filterMainSubSection}>
-								<DateSelector
-									formControlClass={classes.formControl}
-								/>
-								<FormControl
-									variant="outlined"
-									className={classes.formControl}
-									size="small"
-								>
-									<InputLabel id="demo-simple-select-outlined-label" color="primary">Select By</InputLabel>
-									<Select
-										labelId="demo-simple-select-outlined-label"
-										id="demo-simple-select-outlined"
-										value={selectBy}
-										onChange={onChangeSelectBy}
-										label="Select By"
-										color="primary"
-										className={classes.select}
-									>
-										{
-											Object.keys(SelectBy).map(sbKey => <MenuItem key={sbKey} value={SelectBy[sbKey].value}>{SelectBy[sbKey].desc}</MenuItem>)
-										}
-									</Select>
-								</FormControl>
+								<StartDate />
+								<EndDate />
+								<SelectBy />
 							</div>
 							<div className={classes.filterMainSubSection}>
-								<FormControl className={classes.formControl}>
-									<FormLabel component="span">Order Status</FormLabel>
-									<RadioGroup row value={orderStatus} onChange={onChangeOrderStatus}>
-										{
-											Object.keys(OrderStatuses).map(osKey => {
-												return (
-													<FormControlLabel
-														key={osKey}
-														value={OrderStatuses[osKey].value}
-														control={<Radio color="primary" />}
-														label={OrderStatuses[osKey].desc}
-													/>
-												)
-											})
-										}
-									</RadioGroup>
-								</FormControl>
-								<FormControl
-									className={classes.formControl}
-								>
-									<TextField
-										label="Filter by content"
-										variant="outlined"
-										size="small"
-									/>
-								</FormControl>
+								<OrderStatuses />
+								<FilterByContent />
 							</div>
 							<div className={classes.filterMainSubSection}>
-								{
-									(() => {
-										switch (selectBy) {
-											case SelectBy.OrdersType:
-												return <ByOrdersList />;
-											case SelectBy.ItemsType:
-												return <ByItemsList />;
-											default:
-												return null;
-										}
-									})()
-								}
+								<RecordsList />
 							</div>
 						</div>
 						<div className={classes.filterButtonSection}>
