@@ -14,6 +14,7 @@ const staticObject = {
 		let data = null;
 		switch (keys.selectBy) {
 			case OrdersType.value:
+				await new Promise(res => setTimeout(res, 3500))
 				data = await this.orders.filter(ord => {
 					return (
 						(AllOpens.value === keys.orderStatus || ord.Status === keys.orderStatus) &&
@@ -44,10 +45,10 @@ const staticObject = {
 			case OrdersType.value:
 				return await this.orders.filter(ord => {
 					const flag = (AllOpens.value === keys.orderStatus || ord.Status === keys.orderStatus)
-									&& ord.Lines.some(l => {
-										const _flag = l.StartDateTime <= keys.endDate || l.EndDateTime >= keys.startDate
-										return _flag
-									})
+						&& ord.Lines.some(l => {
+							const _flag = l.StartDateTime <= keys.endDate || l.EndDateTime >= keys.startDate
+							return _flag
+						})
 					return flag;
 				}).length
 			case ItemsType.value:
@@ -56,7 +57,7 @@ const staticObject = {
 				return 0;
 		}
 	},
-	_getKeys: function(keySource) {
+	_getKeys: function (keySource) {
 		let key
 		let value;
 		return keySource.split("|").reduce((acc, str) => {

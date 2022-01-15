@@ -1,15 +1,12 @@
 import useRequestApi from '../hooks/useRequestApi';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 function ByOrdersList(props) {
-	const steps = 100;
-	const [chuncks, setChuncks] = useState([0, 99])
-	const { records, load, getStatus, getErrorStack, getCount } = useRequestApi(chuncks)
-	useEffect(() => (console.log(getCount()), console.log(records)), [records])
+	const steps = 50;
+	const [chuncks, setChuncks] = useState([0, 49])
+	const { records, status, errorStack, count, load } = useRequestApi(chuncks)
 	return (
 		<div>
-			{
-				// records.map(d => <p key={d[recordsKeysName[0]]}>{d[recordsKeysName[0]]}</p>)
-			}
+			{status}
 		</div>
 	)
 }

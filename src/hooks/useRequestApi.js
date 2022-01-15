@@ -11,19 +11,19 @@ function useRequestApi(defaultChuncks = [0, 99]) {
 	const filter = useSelector(getFilter)
 	const [initApi] = useState(new Request(apiInterFace, filter))
 	const api = useMemo(() => initApi.Update(filter), [filter])
+	const [status, setStatus] = useState(api.Status)
 	const [chuncks, setChunck] = useState(defaultChuncks)
-	const getStatus = () => api.Status
 	const getErrorStack = () => api.ErrorsStack
 	const getCount = () => api.Count
 	const load = useCallback((_chuncks) => setChunck(_chuncks), [])
 	useEffect(() => { dispatch(actionSetRecords(api.Load(...chuncks))) }, [chuncks, filter])
+	useEffect(() => { setStatus(api.Status) }, [api.Status, chuncks, filter])
 	return {
 		records,
+		status,
 		load,
-		getStatus,
 		getErrorStack,
 		getCount
 	}
 }
-
 export default useRequestApi
