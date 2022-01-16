@@ -22,18 +22,15 @@ function ByItemsList(props) {
 	}, [])
 	useUpdateEffect(() => { load(chuncks) }, [chuncks])
 	return (
-		<div>
-			<PaginatedList
-				records={records}
-				isLoading={(status === InProcess)}
-				active={activs.order}
-				changeActiv={changeActiveOrder}
-				recordsPerPage={steps - 1}
-				pages={getTotalCount() <= steps ? 0 : Math.ceil(getTotalCount() / steps)}
-				goToPage={goToPage}
-				keyName="InventoryCD"
-			/>
-		</div>
+		<PaginatedList
+			records={records}
+			isLoading={(status === InProcess)}
+			active={activs.order}
+			changeActiv={changeActiveOrder}
+			pages={getTotalCount() <= steps ? 0 : Math.ceil(getTotalCount() / steps)}
+			goToPage={goToPage}
+			keyName="InventoryCD"
+		/>
 	)
 }
 

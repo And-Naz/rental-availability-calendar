@@ -1,0 +1,43 @@
+.list {
+	display: flex;
+	flex-direction: column;
+	flex: 1;
+}
+
+.list__items {}
+
+.list__pagination {
+	margin-block-start: 0em;
+	margin-block-end: 0em;
+	padding-inline-start: 0px;
+	list-style-type: none;
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+}
+
+.list__page {
+	border: 1px solid aqua;
+	display: grid;
+	grid-gap: 1px;
+	align-items: center;
+}
+.list__page a {
+	text-align: center;
+	padding: 2px 5px;
+}
+.list__page {
+	margin-right: 2px;
+}
+.list__page--active {}
+.list__page__break {}
+.list__page--previous {
+	margin-right: 5px;
+}
+.list__page--previous a {
+	margin-top: -2px;
+}
+.list__page--next {
+	margin-left: 3px;
+}

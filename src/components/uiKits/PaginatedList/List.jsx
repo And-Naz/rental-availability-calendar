@@ -1,6 +1,6 @@
 import { useRef, useEffect, useState } from "react";
-function List({ currentRecords, keyName }) {
-
+function List(props) {
+	const { currentRecords, keyName } = props
 	return (
 		<ul className="list">
 			{
