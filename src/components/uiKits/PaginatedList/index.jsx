@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import ReactPaginate from "react-paginate";
 import List from "./List";
+import Checkbox from "../Checkbox";
 import "./style.css"
 
 function PaginatedList({
@@ -15,7 +16,17 @@ function PaginatedList({
 	const handlePageClick = useCallback((event) => { goToPage(event.selected) }, []);
 	return (
 		<div className="list">
-			<List className="list__items" currentRecords={currentRecords} keyName={keyName} />
+			<div className="list__select_all">
+				{/* <Checkbox>Select All</Checkbox> */}
+				<Checkbox>Select All</Checkbox>
+			</div>
+			<List
+				className="list__items"
+				currentRecords={currentRecords}
+				keyName={keyName}
+				active={active}
+				changeActiv={changeActiv}
+			/>
 			<ReactPaginate
 				className="list__pagination"
 				pageClassName="list__page"

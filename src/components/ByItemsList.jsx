@@ -11,7 +11,7 @@ function ByItemsList(props) {
 	const [chuncks, setChuncks] = useState([0, 49])
 	const goToPage = useCallback(page => setChuncks([steps * page, (steps * (page + 1)) - 1]), [])
 	const { records, status, errorStack, getTotalCount, load } = useRequestApi(chuncks)
-	const [activs, setActivs] = useState({ order: null, item: null, lotSerial: null })
+	const [activs, setActivs] = useState({ order: "AACOMPUT01", item: null, lotSerial: null })
 	const changeActiveOrder = useCallback((order) => { setActivs(prev => ({ ...prev, order })) }, [])
 	// const changeActiveItem = useCallback((item) => { setActivs(prev => ({ ...prev, item })) }, [])
 	// const changeActiveLotSerial = useCallback((lotSerial) => { setActivs(prev => ({ ...prev, lotSerial })) }, [])
