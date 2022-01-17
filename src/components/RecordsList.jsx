@@ -19,7 +19,7 @@ function RecordsList() {
 						case ItemsType.value:
 							return <ByItemsList />;
 						default:
-							return null;
+							return "Invalid Select By Option.";
 					}
 				})()
 			}

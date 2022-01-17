@@ -5,7 +5,7 @@ import Checkbox from "../Checkbox";
 import "./style.css"
 
 function PaginatedList({
-	records, isLoading, active, changeActiv, pages, goToPage, keyName
+	records, isLoading, active, changeActiv, pages, goToPage, keyName, displayName
 }) {
 	const [currentRecords, setCurrentRecords] = useState(null);
 	const [pageCount, setPageCount] = useState(0);
@@ -17,14 +17,15 @@ function PaginatedList({
 	return (
 		<div className="list">
 			<div className="list__select_all">
-				{/* <Checkbox>Select All</Checkbox> */}
 				<Checkbox>Select All</Checkbox>
 			</div>
 			<List
 				className="list__items"
 				currentRecords={currentRecords}
 				keyName={keyName}
+				displayName={displayName}
 				active={active}
+				isLoading={isLoading}
 				changeActiv={changeActiv}
 			/>
 			<ReactPaginate
@@ -42,6 +43,9 @@ function PaginatedList({
 				previousLabel="<"
 				renderOnZeroPageCount={null}
 			/>
+			{
+				pageCount === 0 && <ul className="list__pagination--blank"></ul>
+			}
 		</div >
 	);
 }

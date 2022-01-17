@@ -6,4 +6,4 @@ export const actionSetStartDate = Synchronous(Types.SetStartDate);
 export const actionSetEndDate = Synchronous(Types.SetEndDate);
 export const actionSetFilterByContent = Synchronous(Types.SetFilterByContent);
 export const actionSetRecords = Asynchronous(Types.SetRecords);
-export const actionSetSelectedRecords = Asynchronous(Types.SetSelectedBy);
+export const actionSetSelectedRecords = Asynchronous(Types.SetSelectedRecords);
