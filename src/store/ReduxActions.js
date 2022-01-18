@@ -5,11 +5,13 @@ export const actionSetOrderStatus = Synchronous(Types.SetOrderStatus);
 export const actionSetStartDate = Synchronous(Types.SetStartDate);
 export const actionSetEndDate = Synchronous(Types.SetEndDate);
 export const actionSetFilterByContent = Synchronous(Types.SetFilterByContent);
+
+export const actionSetSelectedRecords = Synchronous(Types.SetSelectedRecords);
+export const actionAddOrderInSelectedRecords = Synchronous(Types.AddOrderInSelectedRecords);
+export const actionRemoveOrderFromSelectedRecords = Synchronous(Types.RemoveOrderFromSelectedRecords);
+export const actionAddItemInSelectedRecords = Synchronous(Types.AddItemInSelectedRecords);
+export const actionRemoveItemFromSelectedRecords = Synchronous(Types.RemoveItemFromSelectedRecords);
+export const actionAddSerialInSelectedRecords = Synchronous(Types.AddSerialInSelectedRecords);
+export const actionRemoveSerialFromSelectedRecords = Synchronous(Types.RemoveSerialFromSelectedRecords);
+
 export const actionSetCurrentRecords = Asynchronous(Types.SetCurrentRecords);
-export const actionSetSelectedRecords = Asynchronous(Types.SetSelectedRecords);
-export const actionAddOrderInSelectedRecords = Asynchronous(Types.AddOrderInSelectedRecords);
-export const actionRemoveOrderFromSelectedRecords = Asynchronous(Types.RemoveOrderFromSelectedRecords);
-export const actionAddItemInSelectedRecords = Asynchronous(Types.AddItemInSelectedRecords);
-export const actionRemoveItemFromSelectedRecords = Asynchronous(Types.RemoveItemFromSelectedRecords);
-export const actionAddSerialInSelectedRecords = Asynchronous(Types.AddSerialInSelectedRecords);
-export const actionRemoveSerialFromSelectedRecords = Asynchronous(Types.RemoveSerialFromSelectedRecords);

@@ -7,4 +7,5 @@ const rootReducer = combineReducers({
 	filter, records
 })
 const store = createStore(rootReducer, composeWithDevTools(applyMiddleware(thunk)))
+
 export default store

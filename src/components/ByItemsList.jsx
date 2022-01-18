@@ -20,8 +20,8 @@ function ByItemsList(props) {
 	const serials = useFindAndMutateFromArray(records, d => (d.InventoryCD == activeItem && d.IsSerial), d => {return d ? d.SerialsInfo : []}, [records, activeItem])
 	useEffect(() => {
 		return () => {
-			dispatch(actionSetCurrentRecords(Promise.resolve([])))
-			dispatch(actionSetSelectedRecords(Promise.resolve([])))
+			// dispatch(actionSetCurrentRecords(Promise.resolve([])))
+			// dispatch(actionSetSelectedRecords(Promise.resolve([])))
 		}
 	}, [])
 	useUpdateEffect(() => { load(chuncks) }, [chuncks])

@@ -5,6 +5,7 @@ import { InProcess } from "../constants/StatusesOfRequest"
 import { useDispatch } from "react-redux"
 import useUpdateEffect from "../hooks/useUpdateEffect"
 import useFindAndMutateFromArray from '../hooks/useFindAndMutateFromArray';
+import {OrdersType} from "../constants/SelectBy"
 import {
 	actionSetCurrentRecords, actionSetSelectedRecords,
 	actionAddOrderInSelectedRecords, actionRemoveOrderFromSelectedRecords,
@@ -20,8 +21,6 @@ function ByOrdersList(props) {
 	const [activeOrder, setActiveOrder] = useState(null)
 	const [activeItem, setActiveItem] = useState(null)
 	const [activeSerial, setActiveSerial] = useState(null)
-	const changeActiveOrder = useCallback((order) => { setActiveOrder(order)}, [])
-	const changeActiveItem = useCallback((item) => { setActiveItem(item) }, [])
 	const changeActiveSerial = useCallback((serial) => { setActiveSerial(serial) }, [])
 	/* -> Don't use === because then need to convert to string  */
 	const lines = useFindAndMutateFromArray(records, d => (d.OrderNbr == activeOrder), d => {return d ? d.Lines : []}, [records, activeOrder])
@@ -40,33 +39,39 @@ function ByOrdersList(props) {
 			value = target.checked
 			target = target.parentNode.parentNode
 		}
+		const rec = target.dataset.rec;
+		setActiveOrder(rec)
 		if (checkInState && value !== null) {
-			let _msg = null
 			if (value) {
-				dispatch(actionAddOrderInSelectedRecords(Promise.resolve(target.dataset.rec)))
-				_msg = "dispatch action Add Order In Selected Records " + target.dataset.rec
+				dispatch(actionAddOrderInSelectedRecords(rec))
 			} else {
-				dispatch(actionRemoveOrderFromSelectedRecords(Promise.resolve(target.dataset.rec)))
-				_msg = "dispatch action Remove Order From Selected Records " + target.dataset.rec
+				dispatch(actionRemoveOrderFromSelectedRecords(rec))
 			}
-			console.log(_msg);
 		}
-		changeActiveOrder(target.dataset.rec)
-	}, [])
+	}, [records])
 	const onItemsListClick = useCallback(e => {
 		let checkInState = false
+		let value = null
 		let target = e.target
 		if(target.tagName === "UL") {return}
 		if(target.tagName === "SPAN" && target.classList.contains("list__items__text")) {
 			target = target.parentNode
 		}
 		else if (target.tagName === "INPUT" && target.type === "checkbox") {
-			target = target.parentNode.parentNode
 			checkInState = true
+			value = target.checked
+			target = target.parentNode.parentNode
 		}
-		const recData = target.dataset.rec
-		changeActiveItem(recData)
-	}, [])
+		const rec = target.dataset.rec;
+		setActiveItem(rec)
+		if (checkInState && value !== null) {
+			if (value) {
+				dispatch(actionAddItemInSelectedRecords({selectBy: OrdersType, data: rec, active: activeOrder}))
+			} else {
+				dispatch(actionRemoveItemFromSelectedRecords({selectBy: OrdersType, data: rec, active: activeOrder}))
+			}
+		}
+	}, [records, activeOrder])
 	const onSerialsListClick = useCallback(e => {
 		let checkInState = false
 		let target = e.target
@@ -86,7 +91,7 @@ function ByOrdersList(props) {
 			// dispatch(actionSetCurrentRecords(Promise.resolve([])))
 			// dispatch(actionSetSelectedRecords(Promise.resolve([])))
 		}
-	}, [])
+	}, [records, activeOrder, activeItem])
 	useUpdateEffect(() => { load(chuncks) }, [chuncks])
 	return (
 		<>

@@ -1,3 +1,4 @@
+import {OrdersType, ItemsType} from "../../constants/SelectBy"
 import {
 	SetCurrentRecords, SetSelectedRecords,
 	AddOrderInSelectedRecords, RemoveOrderFromSelectedRecords,
@@ -6,22 +7,65 @@ import {
 } from "../../constants/ReduxActionTypes";
 const defaultState = {current: [], selected: []};
 const defaultAction = { type: null, payload: null };
-const recordsReducer = (state = defaultState, action = defaultAction) => {
+function recordsReducer(state = defaultState, action = defaultAction) {
 	switch (action.type) {
-		case SetCurrentRecords: return { ...state, current: action.payload };
-		case SetSelectedRecords: return { ...state, selectedRecords: action.payload };
+		case SetCurrentRecords: return { selected: state.selected, current: action.payload };
+		case SetSelectedRecords: return { current: state.current, selected: action.payload };
         case AddOrderInSelectedRecords:
-			console.log(action);
-            console.log(state);
+			console.log(arguments);
+            const orderFromCurrent = state.current.find(sc => sc.OrderNbr === action.payload)
+			if(orderFromCurrent) {
+				return {current: state.current, selected: state.selected.concat({...orderFromCurrent})};
+			}
 			return state;
 		case RemoveOrderFromSelectedRecords:
-			console.log(action);
+			const newSelected = state.selected.filter(sc => sc.OrderNbr !== action.payload)
+			if(newSelected.length !== state.selected.length) {
+				return {current: state.current, selected: newSelected};
+			}
 			return state;
 		case AddItemInSelectedRecords:
-			console.log(action);
+			if(action.payload.selectBy === OrdersType) {
+				const currentOrder = state.current.find(ord => ord.OrderNbr === action.payload.active)
+				if (!currentOrder) { return state }
+				const line = currentOrder.Lines.find(l => l.LineNbr.toString() === action.payload.data)
+				if(!line) {return state}
+				let selectedOrderIndex = state.selected.findIndex(ord => ord.OrderNbr === action.payload.active)
+				let newSelectedArr = null
+				if(selectedOrderIndex === -1) {
+					let newSelectedOrder = {...currentOrder}
+					newSelectedOrder.Lines = [{...line}]
+					newSelectedArr = state.selected.concat(newSelectedOrder)
+				} else {
+					newSelectedArr = state.selected.concat()
+					newSelectedArr[selectedOrderIndex].Lines.push({...line})
+				}
+				return {current: state.current, selected: newSelectedArr}
+			}
+			if(action.payload.selectBy === ItemsType) {
+				// Comming Soon
+			}
 			return state;
 		case RemoveItemFromSelectedRecords:
-			console.log(action);
+			if(action.payload.selectBy === OrdersType) {
+				// const currentOrder = state.current.find(ord => ord.OrderNbr === action.payload.active)
+				// if (!currentOrder) { return state }
+				// const line = currentOrder.Lines.find(l => l.LineNbr.toString() === action.payload.data)
+				// if(!line) {return state}
+				const currentOrderIndex = state.selected.findIndex(ord => ord.OrderNbr === action.payload.active)
+				if(currentOrderIndex === -1) {return state}
+				const newLines = state.selected[currentOrderIndex].Lines.filter(l => l.LineNbr.toString() !== action.payload.data)
+				let newSelectedArr = [...state.selected]
+				if(!newLines.length) {
+					newSelectedArr = [...newSelectedArr.slice(0, currentOrderIndex), ...newSelectedArr.slice(currentOrderIndex + 1)]
+				} else {
+					newSelectedArr[currentOrderIndex].Lines = newLines
+				}
+				return {current: state.current, selected: newSelectedArr}
+			}
+			if(action.payload.selectBy === ItemsType) {
+				// Comming Soon
+			}
 			return state;
 		case AddSerialInSelectedRecords:
 			console.log(action);
