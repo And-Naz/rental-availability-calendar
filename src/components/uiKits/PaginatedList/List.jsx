@@ -6,25 +6,28 @@ function List(props) {
 		className,
 		keyName,
 		active = null,
-		changeActiv = Function.prototype,
+		onListClick = Function.prototype,
 		isLoading,
 		displayName
 	} = props
-	const handleListClick = (e) => {
-		let target = e.target
-		if(target.nodeName === "UL") {return}
-		if(target.nodeName === "SPAN" && target.classList.contains("list__items__text")) {
-			target = target.parentNode
-		}
-		else if (target.nodeName === "INPUT") {
-			target = target.parentNode.parentNode
-		}
-		changeActiv(target.dataset.rec)
-	}
+	// const handleListClick = (e) => {
+	// 	let checkInState = false
+	// 	let target = e.target
+	// 	if(target.tagName === "UL") {return}
+	// 	if(target.tagName === "SPAN" && target.classList.contains("list__items__text")) {
+	// 		target = target.parentNode
+	// 	}
+	// 	else if (target.tagName === "INPUT" && target.type === "checkbox") {
+	// 		target = target.parentNode.parentNode
+	// 		checkInState = true
+	// 	}
+	// 	const recData = target.dataset.rec
+	// 	changeActiv(recData)
+	// }
 	return (
 		<ul
 			className={className}
-			onClick={handleListClick}
+			onClick={onListClick}
 		>
 			{
 				isLoading
@@ -41,7 +44,7 @@ function List(props) {
 										/* -> Don't use === because then need to convert to string  */
 										className={active == rec[keyName] ? "list__items--active": null}
 									>
-										<Checkbox />
+										<Checkbox /> {/* onChange={onChangeCheckbox} */}
 										<span className="list__items__text">{rec[displayName]}</span>
 									</li>
 								);

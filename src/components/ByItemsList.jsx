@@ -3,7 +3,7 @@ import { useState, useCallback, useEffect } from 'react';
 import PaginatedList from "./uiKits/PaginatedList"
 import { InProcess } from "../constants/StatusesOfRequest"
 import { useDispatch } from "react-redux"
-import { actionSetRecords, actionSetSelectedRecords } from "../store/ReduxActions";
+import { actionSetCurrentRecords, actionSetSelectedRecords } from "../store/ReduxActions";
 import useUpdateEffect from "../hooks/useUpdateEffect"
 import useFindAndMutateFromArray from '../hooks/useFindAndMutateFromArray';
 function ByItemsList(props) {
@@ -20,7 +20,7 @@ function ByItemsList(props) {
 	const serials = useFindAndMutateFromArray(records, d => (d.InventoryCD == activeItem && d.IsSerial), d => {return d ? d.SerialsInfo : []}, [records, activeItem])
 	useEffect(() => {
 		return () => {
-			dispatch(actionSetRecords(Promise.resolve([])))
+			dispatch(actionSetCurrentRecords(Promise.resolve([])))
 			dispatch(actionSetSelectedRecords(Promise.resolve([])))
 		}
 	}, [])

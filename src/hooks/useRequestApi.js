@@ -1,13 +1,13 @@
 import { useState, useMemo, useEffect, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux"
-import { actionSetRecords } from "../store/ReduxActions";
+import { actionSetCurrentRecords } from "../store/ReduxActions";
 import Request from "../api/Request"
 import apiInterFace from "../api/apiInterface"
 const getFilter = state => state.filter;
-const getRecords = state => state.records.records;
+const getCurrentRecords = state => state.records.current;
 function useRequestApi(defaultChuncks = [0, 99]) {
 	const dispatch = useDispatch()
-	const records = useSelector(getRecords)
+	const records = useSelector(getCurrentRecords)
 	const filter = useSelector(getFilter)
 	const [initApi] = useState(new Request(apiInterFace, filter))
 	const api = useMemo(() => initApi.Update(filter), [filter])
@@ -17,7 +17,7 @@ function useRequestApi(defaultChuncks = [0, 99]) {
 	const getTotalCount = () => api.TotalCount
 	const load = useCallback((_chuncks) => setChunck(_chuncks), [])
 	useEffect(() => {
-		dispatch(actionSetRecords(api.Load(...chuncks)))
+		dispatch(actionSetCurrentRecords(api.Load(...chuncks)))
 	}, [chuncks, filter])
 	useEffect(() => { setStatus(api.Status) }, [api.Status, chuncks, filter])
 	return {
