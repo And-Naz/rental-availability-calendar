@@ -20,14 +20,13 @@ function recordsReducer(state = defaultState, action = defaultAction) {
 		case RemoveItemFromSelectedRecords:
 			return RemoveItem(state, action.payload.order, action.payload.selectBy, action.payload.data) || state
 		case AddSerialInSelectedRecords:
+			debugger
 			return AddSerial(state, action.payload.order, action.payload.selectBy, action.payload.item, action.payload.data) || state;
 		case RemoveSerialFromSelectedRecords:
 			return RemoveSerial(state, action.payload.order, action.payload.selectBy, action.payload.item, action.payload.data) || state;
 		default: return state;
 	}
 };
-
-export default recordsReducer;
 
 function AddOrder(state, order) {
 	const orderFromCurrent = state.current.find(sc => sc.OrderNbr === order)
@@ -59,10 +58,14 @@ function AddItem(state, order, selectBy, item) {
 		} else {
 			const orderFromState = state.current.find(ord => ord.OrderNbr === order)
 			if (!orderFromState) { return state }
-			const newitem = orderFromState.Lines.find(l => l.LineNbr.toString() === item)
-			const newSelectedState = state.selected.concat()
-			newSelectedState[selectedOrderIndex].Lines.push({ ...newitem })
-			return { current: state.current, selected: newSelectedState }
+			const selectedItemIndex = state.selected[selectedOrderIndex].Lines.findIndex(l => l.LineNbr.toString() === item.toString())
+			if (selectedItemIndex === -1) {
+				const newitem = orderFromState.Lines.find(l => l.LineNbr.toString() === item)
+				const newSelectedState = state.selected.concat()
+				newSelectedState[selectedOrderIndex].Lines.push({ ...newitem })
+				return { current: state.current, selected: newSelectedState }
+			}
+			return null
 		}
 	}
 	if (selectBy === ItemsType) {
@@ -92,12 +95,34 @@ function RemoveItem(state, order, selectBy, item) {
 function AddSerial(state, order, selectBy, item, serial) {
 	if (selectBy === OrdersType) {
 		const selectedOrderIndex = state.selected.findIndex(o => o.OrderNbr === order)
+		let newState = null
+		let newOrder = null
 		if (selectedOrderIndex === -1) {
-			const newState = AddItem(state, order, selectBy, item)
+			newState = AddItem(state, order, selectBy, item)
 			if (newState === null) { return null }
-			const newOrder = newState.selected[newState.selected.length - 1]
+			newOrder = newState.selected[newState.selected.length - 1]
 			newOrder.Lines[0].SerialsInfo = newOrder.Lines[0].SerialsInfo.filter(si => si.SerialNbr === serial)
 			return newState
+		} else {
+			const itemIndex = state.selected[selectedOrderIndex].Lines.findIndex(l => l.LineNbr.toString() === item.toString())
+			if (itemIndex === -1) {
+				newState = AddItem(state, order, selectBy, item)
+				if (newState === null) { return null }
+				newOrder = newState.selected[newState.selected.length - 1]
+				newOrder.Lines[0].SerialsInfo = newOrder.Lines[0].SerialsInfo.filter(si => si.SerialNbr === serial)
+				return newState
+			} else {
+				newState = { current: state.current, selected: [...state.selected] }
+			}
+			debugger
+			const currentOrder = newState.current.find(o => o.OrderNbr === order)
+			if (!currentOrder) { return null }
+			const currentItem = currentOrder.Lines.find(l => l.LineNbr.toString() === item.toString())
+			if (!currentItem) { return null }
+			const newSerial = currentItem.SerialsInfo.find(si => si.SerialNbr === serial)
+			if (!newSerial) { return null }
+			newState.selected[selectedOrderIndex].Lines[itemIndex].SerialsInfo.push({ ...newSerial })
+			return newState;
 		}
 	}
 	if (selectBy === ItemsType) {
@@ -125,3 +150,5 @@ function RemoveSerial(state, order, selectBy, item, serial) {
 	}
 	return null
 }
+
+export default recordsReducer;

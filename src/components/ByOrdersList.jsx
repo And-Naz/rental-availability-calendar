@@ -93,10 +93,10 @@ function ByOrdersList(props) {
 				dispatch(actionRemoveSerialFromSelectedRecords({ selectBy: OrdersType, data: rec, order: activeOrder, item: activeItem }))
 			}
 		}
-	}, [activeOrder, activeItem])
-	const isOrderChecked = useCallback((order) => checkOrder(order), [checkOrder])
-	const isItemChecked = useCallback((item) => checkItem(item, activeOrder), [checkItem, activeOrder])
-	const isSerialChecked = useCallback((serial) => checkSerial(serial, activeItem, activeOrder), [checkSerial, activeOrder, activeItem])
+	}, [activeOrder, activeItem, activeSerial])
+	const isOrderChecked = useCallback((orderValue) => checkOrder(orderValue), [checkOrder])
+	const isItemChecked = useCallback((itemValue) => checkItem(itemValue, activeOrder), [checkItem, activeOrder])
+	const isSerialChecked = useCallback((serialValue) => checkSerial(serialValue, activeItem, activeOrder), [checkSerial, activeOrder, activeItem])
 	return (
 		<>
 			<PaginatedList
