@@ -97,6 +97,42 @@ function ByOrdersList(props) {
 	const isOrderChecked = useCallback((orderValue) => checkOrder(orderValue), [checkOrder])
 	const isItemChecked = useCallback((itemValue) => checkItem(itemValue, activeOrder), [checkItem, activeOrder])
 	const isSerialChecked = useCallback((serialValue) => checkSerial(serialValue, activeItem, activeOrder), [checkSerial, activeOrder, activeItem])
+	const selectAllOrders = useCallback((e) => {
+		console.log(e.target.checked);
+		if (e.target.checked) {
+			records.forEach(o => {
+				dispatch(actionAddOrderInSelectedRecords(o.OrderNbr))
+			})
+		} else {
+			records.forEach(o => {
+				dispatch(actionRemoveOrderFromSelectedRecords(o.OrderNbr))
+			})
+		}
+	}, [records])
+	const selectAllItems = useCallback((e) => {
+		console.log(e.target.checked);
+		if (e.target.checked) {
+			lines.forEach(l => {
+				dispatch(actionAddItemInSelectedRecords({ selectBy: OrdersType, data: l.LineNbr.toString(), order: activeOrder }))
+			})
+		} else {
+			lines.forEach(l => {
+				dispatch(actionRemoveItemFromSelectedRecords({ selectBy: OrdersType, data: l.LineNbr.toString(), order: activeOrder }))
+			})
+		}
+	}, [lines, activeOrder])
+	const selectAllSerials = useCallback((e) => {
+		console.log(e.target.checked);
+		if (e.target.checked) {
+			serials.forEach(s => {
+				dispatch(actionAddSerialInSelectedRecords({ selectBy: OrdersType, data: s.SerialNbr, order: activeOrder, item: activeItem }))
+			})
+		} else {
+			serials.forEach(s => {
+				dispatch(actionRemoveSerialFromSelectedRecords({ selectBy: OrdersType, data: s.SerialNbr, order: activeOrder, item: activeItem }))
+			})
+		}
+	}, [serials, activeOrder, activeItem])
 	return (
 		<>
 			<PaginatedList
@@ -109,6 +145,7 @@ function ByOrdersList(props) {
 				keyName="OrderNbr"
 				displayName="OrderNbr"
 				isCheckedFunc={isOrderChecked}
+				selectAll={selectAllOrders}
 			/>
 			<PaginatedList
 				records={lines}
@@ -120,6 +157,7 @@ function ByOrdersList(props) {
 				keyName="LineNbr"
 				displayName="InventoryCD"
 				isCheckedFunc={isItemChecked}
+				selectAll={selectAllItems}
 			/>
 			<PaginatedList
 				records={serials}
@@ -131,6 +169,7 @@ function ByOrdersList(props) {
 				keyName="SerialNbr"
 				displayName="SerialNbr"
 				isCheckedFunc={isSerialChecked}
+				selectAll={selectAllSerials}
 			/>
 		</>
 	)

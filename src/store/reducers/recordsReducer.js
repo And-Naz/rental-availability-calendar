@@ -20,7 +20,6 @@ function recordsReducer(state = defaultState, action = defaultAction) {
 		case RemoveItemFromSelectedRecords:
 			return RemoveItem(state, action.payload.order, action.payload.selectBy, action.payload.data) || state
 		case AddSerialInSelectedRecords:
-			debugger
 			return AddSerial(state, action.payload.order, action.payload.selectBy, action.payload.item, action.payload.data) || state;
 		case RemoveSerialFromSelectedRecords:
 			return RemoveSerial(state, action.payload.order, action.payload.selectBy, action.payload.item, action.payload.data) || state;
@@ -114,7 +113,6 @@ function AddSerial(state, order, selectBy, item, serial) {
 			} else {
 				newState = { current: state.current, selected: [...state.selected] }
 			}
-			debugger
 			const currentOrder = newState.current.find(o => o.OrderNbr === order)
 			if (!currentOrder) { return null }
 			const currentItem = currentOrder.Lines.find(l => l.LineNbr.toString() === item.toString())
