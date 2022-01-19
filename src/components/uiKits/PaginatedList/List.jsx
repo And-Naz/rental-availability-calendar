@@ -8,7 +8,8 @@ function List(props) {
 		active = null,
 		onListClick = Function.prototype,
 		isLoading,
-		displayName
+		displayName,
+		isCheckedFunc = Function.prototype
 	} = props
 	return (
 		<ul
@@ -17,24 +18,23 @@ function List(props) {
 		>
 			{
 				isLoading
-				? 
+					?
 					<span className="list__items__state_info"><CircularProgress /></span>
-				: 
+					:
 					(Array.isArray(currentRecords) && currentRecords.length)
-					? currentRecords.map(rec => {
-						return (
-							<li
-								key={rec[keyName]}
-								data-rec={rec[keyName]}
-								/* -> Don't use === because then need to convert to string  */
-								className={active == rec[keyName] ? "list__items--active": null}
-							>
-								<Checkbox /> {/* onChange={onChangeCheckbox} */}
-								<span className="list__items__text">{rec[displayName]}</span>
-							</li>
-						);
-					})
-					: null
+						? currentRecords.map(rec => {
+							return (
+								<li
+									key={rec[keyName]}
+									data-rec={rec[keyName]}
+									className={active === rec[keyName].toString() ? "list__items--active" : null}
+								>
+									<Checkbox checked={isCheckedFunc(rec[keyName])} /> {/* onChange={onChangeCheckbox} */}
+									<span className="list__items__text">{rec[displayName]}</span>
+								</li>
+							);
+						})
+						: null
 			}
 		</ul>
 	);

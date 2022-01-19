@@ -4,10 +4,10 @@ import PaginatedList from "./uiKits/PaginatedList"
 import { InProcess } from "../constants/StatusesOfRequest"
 import { useDispatch } from "react-redux"
 import useUpdateEffect from "../hooks/useUpdateEffect"
+import useIsRecordSelected from "../hooks/useIsRecordSelected"
 import useFindAndMutateFromArray from '../hooks/useFindAndMutateFromArray';
-import {OrdersType} from "../constants/SelectBy"
+import { OrdersType } from "../constants/SelectBy"
 import {
-	actionSetCurrentRecords, actionSetSelectedRecords,
 	actionAddOrderInSelectedRecords, actionRemoveOrderFromSelectedRecords,
 	actionAddItemInSelectedRecords, actionRemoveItemFromSelectedRecords,
 	actionAddSerialInSelectedRecords, actionRemoveSerialFromSelectedRecords
@@ -21,16 +21,16 @@ function ByOrdersList(props) {
 	const [activeOrder, setActiveOrder] = useState(null)
 	const [activeItem, setActiveItem] = useState(null)
 	const [activeSerial, setActiveSerial] = useState(null)
-	/* -> Don't use === because then need to convert to string  */
-	const lines = useFindAndMutateFromArray(records, d => (d.OrderNbr == activeOrder), d => {return d ? d.Lines : []}, [records, activeOrder])
-	/* -> Don't use === because then need to convert to string  */
-	const serials = useFindAndMutateFromArray(lines, d => (d.LineNbr == activeItem && d.IsSerial), d => {return d ? d.SerialsInfo : []}, [lines, activeItem])
+	useUpdateEffect(() => { load(chuncks) }, [chuncks])
+	const lines = useFindAndMutateFromArray(records, d => (d.OrderNbr === activeOrder), d => { return d ? d.Lines : [] }, [records, activeOrder])
+	const serials = useFindAndMutateFromArray(lines, d => (d.LineNbr.toString() === activeItem && d.IsSerial), d => { return d ? d.SerialsInfo : [] }, [lines, activeItem])
+	const { checkOrder, checkItem, checkSerial } = useIsRecordSelected()
 	const onOrdersListClick = useCallback(e => {
 		let checkInState = false
 		let value = null
 		let target = e.target
-		if(target.tagName === "UL") {return}
-		if(target.tagName === "SPAN" && target.classList.contains("list__items__text")) {
+		if (target.tagName === "UL") { return }
+		if (target.tagName === "SPAN" && target.classList.contains("list__items__text")) {
 			target = target.parentNode
 		}
 		else if (target.tagName === "INPUT" && target.type === "checkbox") {
@@ -52,8 +52,8 @@ function ByOrdersList(props) {
 		let checkInState = false
 		let value = null
 		let target = e.target
-		if(target.tagName === "UL") {return}
-		if(target.tagName === "SPAN" && target.classList.contains("list__items__text")) {
+		if (target.tagName === "UL") { return }
+		if (target.tagName === "SPAN" && target.classList.contains("list__items__text")) {
 			target = target.parentNode
 		}
 		else if (target.tagName === "INPUT" && target.type === "checkbox") {
@@ -65,9 +65,9 @@ function ByOrdersList(props) {
 		setActiveItem(rec)
 		if (checkInState && value !== null) {
 			if (value) {
-				dispatch(actionAddItemInSelectedRecords({selectBy: OrdersType, data: rec, order: activeOrder}))
+				dispatch(actionAddItemInSelectedRecords({ selectBy: OrdersType, data: rec, order: activeOrder }))
 			} else {
-				dispatch(actionRemoveItemFromSelectedRecords({selectBy: OrdersType, data: rec, order: activeOrder}))
+				dispatch(actionRemoveItemFromSelectedRecords({ selectBy: OrdersType, data: rec, order: activeOrder }))
 			}
 		}
 	}, [activeOrder])
@@ -75,8 +75,8 @@ function ByOrdersList(props) {
 		let checkInState = false
 		let value = null
 		let target = e.target
-		if(target.tagName === "UL") {return}
-		if(target.tagName === "SPAN" && target.classList.contains("list__items__text")) {
+		if (target.tagName === "UL") { return }
+		if (target.tagName === "SPAN" && target.classList.contains("list__items__text")) {
 			target = target.parentNode
 		}
 		else if (target.tagName === "INPUT" && target.type === "checkbox") {
@@ -88,19 +88,15 @@ function ByOrdersList(props) {
 		setActiveSerial(rec)
 		if (checkInState && value !== null) {
 			if (value) {
-				dispatch(actionAddSerialInSelectedRecords({selectBy: OrdersType, data: rec, order: activeOrder, item: activeItem}))
+				dispatch(actionAddSerialInSelectedRecords({ selectBy: OrdersType, data: rec, order: activeOrder, item: activeItem }))
 			} else {
-				//dispatch(actionRemoveItemFromSelectedRecords({selectBy: OrdersType, data: rec, active: activeItem}))
+				dispatch(actionRemoveSerialFromSelectedRecords({ selectBy: OrdersType, data: rec, order: activeOrder, item: activeItem }))
 			}
 		}
 	}, [activeOrder, activeItem])
-	useEffect(() => {
-		return () => {
-			// dispatch(actionSetCurrentRecords(Promise.resolve([])))
-			// dispatch(actionSetSelectedRecords(Promise.resolve([])))
-		}
-	}, [records, activeOrder, activeItem])
-	useUpdateEffect(() => { load(chuncks) }, [chuncks])
+	const isOrderChecked = useCallback((order) => checkOrder(order), [checkOrder])
+	const isItemChecked = useCallback((item) => checkItem(item, activeOrder), [checkItem, activeOrder])
+	const isSerialChecked = useCallback((serial) => checkSerial(serial, activeItem, activeOrder), [checkSerial, activeOrder, activeItem])
 	return (
 		<>
 			<PaginatedList
@@ -112,6 +108,7 @@ function ByOrdersList(props) {
 				goToPage={goToPage}
 				keyName="OrderNbr"
 				displayName="OrderNbr"
+				isCheckedFunc={isOrderChecked}
 			/>
 			<PaginatedList
 				records={lines}
@@ -122,6 +119,7 @@ function ByOrdersList(props) {
 				goToPage={Function.prototype}
 				keyName="LineNbr"
 				displayName="InventoryCD"
+				isCheckedFunc={isItemChecked}
 			/>
 			<PaginatedList
 				records={serials}
@@ -132,6 +130,7 @@ function ByOrdersList(props) {
 				goToPage={Function.prototype}
 				keyName="SerialNbr"
 				displayName="SerialNbr"
+				isCheckedFunc={isSerialChecked}
 			/>
 		</>
 	)

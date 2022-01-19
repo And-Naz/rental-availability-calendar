@@ -5,7 +5,7 @@ import Checkbox from "../Checkbox";
 import "./style.css"
 
 function PaginatedList({
-	records, isLoading, active, onListClick, pages, goToPage, keyName, displayName
+	records, isLoading, active, onListClick, pages, goToPage, keyName, displayName, isCheckedFunc
 }) {
 	const [currentRecords, setCurrentRecords] = useState(null);
 	const [pageCount, setPageCount] = useState(0);
@@ -27,6 +27,7 @@ function PaginatedList({
 				active={active}
 				isLoading={isLoading}
 				onListClick={onListClick}
+				isCheckedFunc={isCheckedFunc}
 			/>
 			<ReactPaginate
 				className="list__pagination"
