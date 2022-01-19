@@ -20,8 +20,8 @@ function List(props) {
 				? 
 					<span className="list__items__state_info"><CircularProgress /></span>
 				: 
-					(Array.isArray(currentRecords) && currentRecords.length) &&
-					currentRecords.map(rec => {
+					(Array.isArray(currentRecords) && currentRecords.length)
+					? currentRecords.map(rec => {
 						return (
 							<li
 								key={rec[keyName]}
@@ -34,6 +34,7 @@ function List(props) {
 							</li>
 						);
 					})
+					: null
 			}
 		</ul>
 	);

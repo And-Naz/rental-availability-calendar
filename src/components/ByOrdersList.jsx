@@ -21,7 +21,6 @@ function ByOrdersList(props) {
 	const [activeOrder, setActiveOrder] = useState(null)
 	const [activeItem, setActiveItem] = useState(null)
 	const [activeSerial, setActiveSerial] = useState(null)
-	const changeActiveSerial = useCallback((serial) => { setActiveSerial(serial) }, [])
 	/* -> Don't use === because then need to convert to string  */
 	const lines = useFindAndMutateFromArray(records, d => (d.OrderNbr == activeOrder), d => {return d ? d.Lines : []}, [records, activeOrder])
 	/* -> Don't use === because then need to convert to string  */
@@ -66,26 +65,35 @@ function ByOrdersList(props) {
 		setActiveItem(rec)
 		if (checkInState && value !== null) {
 			if (value) {
-				dispatch(actionAddItemInSelectedRecords({selectBy: OrdersType, data: rec, active: activeOrder}))
+				dispatch(actionAddItemInSelectedRecords({selectBy: OrdersType, data: rec, order: activeOrder}))
 			} else {
-				dispatch(actionRemoveItemFromSelectedRecords({selectBy: OrdersType, data: rec, active: activeOrder}))
+				dispatch(actionRemoveItemFromSelectedRecords({selectBy: OrdersType, data: rec, order: activeOrder}))
 			}
 		}
-	}, [records, activeOrder])
+	}, [activeOrder])
 	const onSerialsListClick = useCallback(e => {
 		let checkInState = false
+		let value = null
 		let target = e.target
 		if(target.tagName === "UL") {return}
 		if(target.tagName === "SPAN" && target.classList.contains("list__items__text")) {
 			target = target.parentNode
 		}
 		else if (target.tagName === "INPUT" && target.type === "checkbox") {
-			target = target.parentNode.parentNode
 			checkInState = true
+			value = target.checked
+			target = target.parentNode.parentNode
 		}
-		const recData = target.dataset.rec
-		changeActiveSerial(recData)
-	}, [])
+		const rec = target.dataset.rec
+		setActiveSerial(rec)
+		if (checkInState && value !== null) {
+			if (value) {
+				dispatch(actionAddSerialInSelectedRecords({selectBy: OrdersType, data: rec, order: activeOrder, item: activeItem}))
+			} else {
+				//dispatch(actionRemoveItemFromSelectedRecords({selectBy: OrdersType, data: rec, active: activeItem}))
+			}
+		}
+	}, [activeOrder, activeItem])
 	useEffect(() => {
 		return () => {
 			// dispatch(actionSetCurrentRecords(Promise.resolve([])))

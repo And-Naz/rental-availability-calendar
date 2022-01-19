@@ -7,14 +7,14 @@ const AcuRNT = {
 	GetRentalOrders: async function (startDate, endDate, radioValue) {
 		const params = { startDateStr: '', endDateStr: '', allowShipped: false, allowNotShipped: false, allOpened: false }
 		if (startDate instanceof Date) {
-			params.startDateStr = startDate.FormatDate("YYYY-MM-DD")
+			params.startDateStr = startDate.$formatDate("YYYY-MM-DD")
 		} else if (typeof startDate === "string") {
 			params.startDateStr = startDate
 		} else {
 			return []
 		}
 		if (endDate instanceof Date) {
-			params.endDateStr = endDate.FormatDate("YYYY-MM-DD")
+			params.endDateStr = endDate.$formatDate("YYYY-MM-DD")
 		} else if (typeof endDate === "string") {
 			params.startDateStr = endDate
 		} else {
@@ -43,14 +43,14 @@ const AcuRNT = {
 	GetRentalItemsOrders: async function (startDate, endDate, radioValue, selectedList) {
 		const params = { startDateStr: '', endDateStr: '', allowShipped: false, allowNotShipped: false, allOpened: false, itemInfoList: [] }
 		if (startDate instanceof Date) {
-			params.startDateStr = startDate.FormatDate("YYYY-MM-DD")
+			params.startDateStr = startDate.$formatDate("YYYY-MM-DD")
 		} else if (typeof startDate === "string") {
 			params.startDateStr = startDate
 		} else {
 			return []
 		}
 		if (endDate instanceof Date) {
-			params.endDateStr = endDate.FormatDate("YYYY-MM-DD")
+			params.endDateStr = endDate.$formatDate("YYYY-MM-DD")
 		} else if (typeof endDate === "string") {
 			params.startDateStr = endDate
 		} else {

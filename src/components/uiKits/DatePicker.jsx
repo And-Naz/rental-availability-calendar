@@ -22,7 +22,7 @@ function DatePicker(props) {
             <TextField
                 label={props.label || "Date"}
                 type="date"
-                value={props.value ? props.value.FormatDate("YYYY-MM-DD") : Date.Current.FormatDate("YYYY-MM-DD")}
+                value={props.value ? props.value.$formatDate("YYYY-MM-DD") : Date.$Current.$formatDate("YYYY-MM-DD")}
                 variant={props.textFieldVariant || "outlined"}
                 sx={props.textFieldSx || textFieldSx}
                 size={props.textFieldSize || "small"}

@@ -1,4 +1,4 @@
-function colorLog(message, color) {
+function $colorLog(message, color) {
 	let retValColor = color || "black";
 	switch (color) {
 		case "success":  
@@ -18,4 +18,4 @@ function colorLog(message, color) {
 	}
 	console.log("%c" + message, "color:" + retValColor);
 }
-Object.defineProperty(console, "colorLog", { value: colorLog })
+Object.defineProperty(console, "$colorLog", { value: $colorLog })

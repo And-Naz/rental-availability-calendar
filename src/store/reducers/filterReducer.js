@@ -2,8 +2,8 @@ import { OrdersType } from "../../constants/SelectBy";
 import { NotShipped } from "../../constants/OrderStatuses";
 import { SetSelectedBy, SetOrderStatus, SetStartDate, SetEndDate, SetFilterByContent } from "../../constants/ReduxActionTypes";
 const defaultState = {
-    startDate: Date.Current,
-    endDate: Date.Current.DayAddedDate(31),
+    startDate: Date.$Current,
+    endDate: Date.$Current.$dayAddedDate(31),
     selectBy: OrdersType.value,
     orderStatus: NotShipped.value,
     filterByContent: ""

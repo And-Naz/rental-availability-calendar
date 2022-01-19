@@ -83,8 +83,8 @@ class Request {
 	}
 	#createCacheKey = () => {
 		const _filter = { ...this.Filter };
-		_filter.startDate = _filter.startDate.FormatDate("YYYY-MM-DD")
-		_filter.endDate = _filter.endDate.FormatDate("YYYY-MM-DD")
+		_filter.startDate = _filter.startDate.$formatDate("YYYY-MM-DD")
+		_filter.endDate = _filter.endDate.$formatDate("YYYY-MM-DD")
 		delete _filter.filterByContent
 		const key = Object.keys(_filter).reduce((acc, key) => {
 			return acc += `${key}:${_filter[key]}|`
@@ -148,8 +148,8 @@ class Request {
 	#orderStatus = OrderStatuses.NotShipped.value;
 	#lastLoadChunckStart = null;
 	#lastLoadChunckEnd = null;
-	#startDate = Date.Current;
-	#endDate = Date.Current.DayAddedDate(31);
+	#startDate = Date.$Current;
+	#endDate = Date.$Current.$dayAddedDate(31);
 	#filterByContent = "";
 	get Filter() {
 		return {
@@ -259,7 +259,7 @@ class Request {
 		const mapKeyName = this.SelectBy === SelectBy.OrdersType.value ? "OrderNbr" : "InventoryCD";
 		const cacheInfo = await this.#takeCacheInfo(currentKey, start, end)
 		if (cacheInfo.inCacheExistsChunck) {
-			console.colorLog("Cache Info", "teal");
+			console.$colorLog("Cache Info", "teal");
 			console.log([...this.#cache[currentKey].values()]);
 			const dataFromCache = [...this.#cache[currentKey].values()].reduce((acc, elem, index) => {
 				if (cacheInfo.cacheStart <= index && index <= cacheInfo.cacheEnd) {

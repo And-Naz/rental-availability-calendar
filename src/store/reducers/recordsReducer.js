@@ -12,7 +12,6 @@ function recordsReducer(state = defaultState, action = defaultAction) {
 		case SetCurrentRecords: return { selected: state.selected, current: action.payload };
 		case SetSelectedRecords: return { current: state.current, selected: action.payload };
         case AddOrderInSelectedRecords:
-			console.log(arguments);
             const orderFromCurrent = state.current.find(sc => sc.OrderNbr === action.payload)
 			if(orderFromCurrent) {
 				return {current: state.current, selected: state.selected.concat({...orderFromCurrent})};
@@ -26,11 +25,11 @@ function recordsReducer(state = defaultState, action = defaultAction) {
 			return state;
 		case AddItemInSelectedRecords:
 			if(action.payload.selectBy === OrdersType) {
-				const currentOrder = state.current.find(ord => ord.OrderNbr === action.payload.active)
+				const currentOrder = state.current.find(ord => ord.OrderNbr === action.payload.order)
 				if (!currentOrder) { return state }
 				const line = currentOrder.Lines.find(l => l.LineNbr.toString() === action.payload.data)
 				if(!line) {return state}
-				let selectedOrderIndex = state.selected.findIndex(ord => ord.OrderNbr === action.payload.active)
+				let selectedOrderIndex = state.selected.findIndex(ord => ord.OrderNbr === action.payload.order)
 				let newSelectedArr = null
 				if(selectedOrderIndex === -1) {
 					let newSelectedOrder = {...currentOrder}
@@ -48,16 +47,12 @@ function recordsReducer(state = defaultState, action = defaultAction) {
 			return state;
 		case RemoveItemFromSelectedRecords:
 			if(action.payload.selectBy === OrdersType) {
-				// const currentOrder = state.current.find(ord => ord.OrderNbr === action.payload.active)
-				// if (!currentOrder) { return state }
-				// const line = currentOrder.Lines.find(l => l.LineNbr.toString() === action.payload.data)
-				// if(!line) {return state}
-				const currentOrderIndex = state.selected.findIndex(ord => ord.OrderNbr === action.payload.active)
+				const currentOrderIndex = state.selected.findIndex(ord => ord.OrderNbr === action.payload.order)
 				if(currentOrderIndex === -1) {return state}
 				const newLines = state.selected[currentOrderIndex].Lines.filter(l => l.LineNbr.toString() !== action.payload.data)
 				let newSelectedArr = [...state.selected]
 				if(!newLines.length) {
-					newSelectedArr = [...newSelectedArr.slice(0, currentOrderIndex), ...newSelectedArr.slice(currentOrderIndex + 1)]
+					newSelectedArr = newSelectedArr.$removeByIndex(currentOrderIndex)
 				} else {
 					newSelectedArr[currentOrderIndex].Lines = newLines
 				}
@@ -68,7 +63,20 @@ function recordsReducer(state = defaultState, action = defaultAction) {
 			}
 			return state;
 		case AddSerialInSelectedRecords:
+			debugger
 			console.log(action);
+			if(action.payload.selectBy === OrdersType) {
+				const currentOrderIndex = state.selected.findIndex(ord => ord.OrderNbr === action.payload.order)
+				if(currentOrderIndex === -1) {
+
+				} else {
+					const currentItemIndex = state.selected[currentOrderIndex].Lines.findIndex(l => l.LineNbr.toString() !== action.payload.item)
+				}
+
+			}
+			if(action.payload.selectBy === ItemsType) {
+				// Comming Soon
+			}
 			return state;
 		case RemoveSerialFromSelectedRecords:
 			console.log(action);
