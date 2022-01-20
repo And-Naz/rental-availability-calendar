@@ -5,11 +5,11 @@ function List(props) {
 		currentRecords,
 		className,
 		keyName,
-		active = null,
-		onListClick = Function.prototype,
+		active,
+		onListClick,
 		isLoading,
 		displayName,
-		isCheckedFunc = Function.prototype
+		isCheckedFunc
 	} = props
 	return (
 		<ul

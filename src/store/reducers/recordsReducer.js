@@ -131,16 +131,20 @@ function AddSerial(state, order, selectBy, item, serial) {
 
 function RemoveSerial(state, order, selectBy, item, serial) {
 	if (selectBy === OrdersType) {
-		const selectedOrderIndex = state.selected.findIndex(o => o.OrderNbr === order)
-		if (selectedOrderIndex === -1) { return null }
-		const selectedItemIndex = state.selected[selectedOrderIndex].Lines.findIndex(l => l.LineNbr.toString() === item)
-		if (selectedItemIndex === -1) { return null }
-		if (state.selected[selectedOrderIndex].Lines[selectedItemIndex].SerialsInfo.length === 1 && state.selected[selectedOrderIndex].Lines[selectedItemIndex].SerialsInfo[0].SerialNbr === serial) {
-			return RemoveItem(state, order, selectBy, item)
-		}
-		const newSerials = state.selected[selectedOrderIndex].Lines[selectedItemIndex].SerialsInfo.filter(si => si.SerialNbr !== serial)
 		const newState = { current: state.current, selected: [...state.selected] }
-		newState.selected[selectedOrderIndex].Lines[selectedItemIndex].SerialsInfo = newSerials
+		const selectedOrderIndex = newState.selected.findIndex(o => o.OrderNbr === order)
+		if (selectedOrderIndex === -1) { return null }
+		const newOrder = {...newState.selected[selectedOrderIndex]}
+		const selectedItemIndex = newState.selected[selectedOrderIndex].Lines.findIndex(l => l.LineNbr.toString() === item)
+		if (selectedItemIndex === -1) { return null }
+		const newLines = [...newOrder.Lines].map(l => ({...l}))
+		if (newLines[selectedItemIndex].SerialsInfo.length === 1 && newLines[selectedItemIndex].SerialsInfo[0].SerialNbr === serial) {
+			return RemoveItem(newState, order, selectBy, item)
+		}
+		const newSerialsInfo = [...newLines[selectedItemIndex].SerialsInfo].map(si => ({...si}));
+		newLines[selectedItemIndex].SerialsInfo = newSerialsInfo.filter(si => si.SerialNbr !== serial)
+		newOrder.Lines = newLines
+		newState.selected[selectedOrderIndex] = newOrder
 		return newState
 	}
 	if (selectBy === ItemsType) {
