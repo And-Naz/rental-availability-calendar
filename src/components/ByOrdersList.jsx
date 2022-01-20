@@ -4,8 +4,9 @@ import PaginatedList from "./uiKits/PaginatedList"
 import { InProcess } from "../constants/StatusesOfRequest"
 import { useDispatch } from "react-redux"
 import useUpdateEffect from "../hooks/useUpdateEffect"
-import useIsRecordSelected from "../hooks/useIsRecordSelected"
 import useFindAndMutateFromArray from '../hooks/useFindAndMutateFromArray';
+import useIsRecordSelected from "../hooks/useIsRecordSelected"
+import useIsAllSelected from "../hooks/useIsAllSelected"
 import { OrdersType } from "../constants/SelectBy"
 import {
 	actionAddOrderInSelectedRecords, actionRemoveOrderFromSelectedRecords,
@@ -133,6 +134,16 @@ function ByOrdersList(props) {
 			})
 		}
 	}, [serials, activeOrder, activeItem])
+	const isAllOrdersSelected = useIsAllSelected(records)
+	const isAllItemsSelected = useIsAllSelected(lines, selected => {
+		return selected.find(o => o.OrderNbr === activeOrder)?.Lines
+	}, [activeOrder])
+	const isAllSerialsSelected = useIsAllSelected(serials, selected => {
+		return selected
+		.find(o => o.OrderNbr === activeOrder)
+		?.Lines.find(l => l.LineNbr.toString() === activeItem.toString())
+		?.SerialsInfo
+	}, [activeOrder, activeItem])
 	return (
 		<>
 			<PaginatedList
@@ -146,6 +157,7 @@ function ByOrdersList(props) {
 				displayName="OrderNbr"
 				isCheckedFunc={isOrderChecked}
 				selectAll={selectAllOrders}
+				isAllSelected={isAllOrdersSelected}
 			/>
 			<PaginatedList
 				records={lines}
@@ -158,6 +170,7 @@ function ByOrdersList(props) {
 				displayName="InventoryCD"
 				isCheckedFunc={isItemChecked}
 				selectAll={selectAllItems}
+				isAllSelected={isAllItemsSelected}
 			/>
 			<PaginatedList
 				records={serials}
@@ -170,6 +183,7 @@ function ByOrdersList(props) {
 				displayName="SerialNbr"
 				isCheckedFunc={isSerialChecked}
 				selectAll={selectAllSerials}
+				isAllSelected={isAllSerialsSelected}
 			/>
 		</>
 	)

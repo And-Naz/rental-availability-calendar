@@ -5,7 +5,7 @@ import Checkbox from "../Checkbox";
 import "./style.css"
 
 function PaginatedList({
-	records, isLoading, active, onListClick, pages, goToPage, keyName, displayName, isCheckedFunc, selectAll
+	records, isLoading, active, onListClick, pages, goToPage, keyName, displayName, isCheckedFunc, selectAll, isAllSelected
 }) {
 	const [currentRecords, setCurrentRecords] = useState(null);
 	const [pageCount, setPageCount] = useState(0);
@@ -17,7 +17,7 @@ function PaginatedList({
 	return (
 		<div className="list">
 			<div className="list__select_all">
-				<Checkbox onClick={selectAll}>Select All</Checkbox>
+				<Checkbox checked={isAllSelected} onClick={selectAll}>Select All</Checkbox>
 			</div>
 			<List
 				className="list__items"
