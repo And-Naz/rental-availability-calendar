@@ -1,6 +1,6 @@
 import { OrdersType, ItemsType } from "../../constants/SelectBy"
 import {
-	SetCurrentRecords, SetSelectedRecords,
+	SetCurrentRecords, SetCurrentRecordsSync, SetSelectedRecords,
 	AddOrderInSelectedRecords, RemoveOrderFromSelectedRecords,
 	AddItemInSelectedRecords, RemoveItemFromSelectedRecords,
 	AddSerialInSelectedRecords, RemoveSerialFromSelectedRecords
@@ -10,6 +10,7 @@ const defaultAction = { type: null, payload: null };
 function recordsReducer(state = defaultState, action = defaultAction) {
 	switch (action.type) {
 		case SetCurrentRecords: return { selected: state.selected, current: action.payload };
+		case SetCurrentRecordsSync: return { selected: state.selected, current: action.payload };
 		case SetSelectedRecords: return { current: state.current, selected: action.payload };
 		case AddOrderInSelectedRecords:
 			return AddOrder(state, action.payload) || state;
@@ -45,7 +46,7 @@ function RemoveOrder(state, order) {
 
 function AddItem(state, order, selectBy, item) {
 	if (selectBy === OrdersType) {
-		let selectedOrderIndex = state.selected.findIndex(ord => ord.OrderNbr === order)
+		const selectedOrderIndex = state.selected.findIndex(ord => ord.OrderNbr === order)
 		if (selectedOrderIndex === -1) {
 			const newState = AddOrder(state, order)
 			if (newState === null) { return state }
@@ -68,7 +69,10 @@ function AddItem(state, order, selectBy, item) {
 		}
 	}
 	if (selectBy === ItemsType) {
-		// Comming Soon
+		const itemFromCurrent = state.current.find(sc => sc.InventoryCD === item)
+		if (itemFromCurrent) {
+			return { current: state.current, selected: state.selected.concat({ ...itemFromCurrent }) };
+		}
 	}
 	return null;
 }
@@ -86,7 +90,10 @@ function RemoveItem(state, order, selectBy, item) {
 		return { current: state.current, selected: newSelectedArr }
 	}
 	if (selectBy === ItemsType) {
-		// Comming Soon
+		const newSelected = state.selected.filter(sc => sc.InventoryCD !== item)
+		if (newSelected.length !== state.selected.length) {
+			return { current: state.current, selected: newSelected };
+		}
 	}
 	return null;
 }
@@ -124,7 +131,22 @@ function AddSerial(state, order, selectBy, item, serial) {
 		}
 	}
 	if (selectBy === ItemsType) {
-		// Comming Soon
+		const selectedItemIndex = state.selected.findIndex(i => i.InventoryCD === item)
+		if (selectedItemIndex === -1) {
+			const newState = AddItem(state, order, selectBy, item)
+			if (newState === null) { return state }
+			const newItem = newState.selected[newState.selected.length - 1]
+			newItem.SerialsInfo = newItem.SerialsInfo.map(si => ({...si}))
+			newState.selected[newState.selected.length - 1] = { ...newItem }
+			return newState
+		} else {
+			const itemFromState = state.current.find(i => i.InventoryCD === item)
+			if (!itemFromState) { return null }
+			const newSerial = itemFromState.SerialsInfo.find(si => si.SerialNbr === serial)
+			const newSelectedState = state.selected.concat()
+			newSelectedState[selectedItemIndex].SerialsInfo.push({ ...newSerial })
+			return { current: state.current, selected: newSelectedState }
+		}
 	}
 	return null
 }
@@ -148,7 +170,15 @@ function RemoveSerial(state, order, selectBy, item, serial) {
 		return newState
 	}
 	if (selectBy === ItemsType) {
-		// Comming Soon
+		const newState = { current: state.current, selected: [...state.selected] }
+		const selectedItemIndex = newState.selected.findIndex(i => i.InventoryCD === item)
+		if (selectedItemIndex === -1) { return null }
+		if (newState.selected[selectedItemIndex].SerialsInfo.length === 1 && newState.selected[selectedItemIndex].SerialsInfo[0].SerialNbr === serial) {
+			return RemoveItem(newState, order, selectBy, item)
+		}
+		const newSerialsInfo = newState.selected[selectedItemIndex].SerialsInfo.map(si => ({...si}));
+		newState.selected[selectedItemIndex].SerialsInfo = newSerialsInfo.filter(si => si.SerialNbr !== serial)
+		return newState
 	}
 	return null
 }

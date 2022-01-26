@@ -10,21 +10,18 @@ function BoardEmptyBody(props) {
 		alignItems: "center"
 	}), [])
 	return (
-		<div style={style}>
-			{
-				!props.isLoading
-					?
+			
+			!props.isLoading
+				?
+				<div>
+					<div>IIG Rental Availability Calendar.</div>
+				</div>
+				:
+				<div>
 					<div>
-						<div>IIG Rental Availability Calendar.</div>
+						<CircularProgress />
 					</div>
-					:
-					<div>
-						<div>
-							<CircularProgress />
-						</div>
-					</div>
-			}
-		</div>
+				</div>
 	)
 }
 

@@ -106,12 +106,20 @@ function FilterModal(props) {
 							<Button
 								variant="contained"
 								color="primary"
+								onClick={e => {
+									props.onProcess()
+									props.closeFilter()
+								}}
 							>
 								Process
 							</Button>
 							<Button
 								variant="contained"
 								color="primary"
+								onClick={e => {
+									props.onClear()
+									props.closeFilter()
+								}}
 							>
 								Clear
 							</Button>

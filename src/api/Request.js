@@ -223,6 +223,8 @@ class Request {
 		this.StartDate = filter.startDate
 		this.EndDate = filter.endDate
 		this.FilterByContent = filter.filterByContent
+		this.#errorsStack = []
+		this.#status = Request.Statuses.Rest
 		if (!this.#validateAll()) {
 			this.#status = Request.Statuses.Error;
 			throw new Error(this.ErrorsStack.join(" "))
@@ -259,8 +261,6 @@ class Request {
 		const mapKeyName = this.SelectBy === SelectBy.OrdersType.value ? "OrderNbr" : "InventoryCD";
 		const cacheInfo = await this.#takeCacheInfo(currentKey, start, end)
 		if (cacheInfo.inCacheExistsChunck) {
-			console.$colorLog("Cache Info", "teal");
-			console.log([...this.#cache[currentKey].values()]);
 			const dataFromCache = [...this.#cache[currentKey].values()].reduce((acc, elem, index) => {
 				if (cacheInfo.cacheStart <= index && index <= cacheInfo.cacheEnd) {
 					acc.push(elem)
@@ -289,7 +289,6 @@ class Request {
 			this.#status = Request.Statuses.Rest;
 		}
 		const _filterByContent = this.FilterByContent.toLowerCase()
-		console.log(this.#cache);
 		return retVal.filter(d => {
 			return d[mapKeyName].toLowerCase().includes(_filterByContent)
 		})

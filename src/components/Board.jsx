@@ -4,6 +4,7 @@ import BoardHeader from './BoardHeader'
 import BoardBody from './BoardBody';
 import { makeStyles } from '@mui/styles';
 import useToggle from '../hooks/useToggle';
+import useDrowInfo from '../hooks/useDrowInfo';
 
 const useStyles = makeStyles((theme) => ({
 	board: {
@@ -26,7 +27,7 @@ const useStyles = makeStyles((theme) => ({
 
 function Board(props) {
 	const classes = useStyles();
-	const [dataForDrow, /*setDataForDrow*/] = useState([])
+	const {data, onProcess, onClear} = useDrowInfo()
 	const [openFilter, setOpenFilter] = useToggle(true);
 	console.log("Render: Board");
 	return (
@@ -34,9 +35,11 @@ function Board(props) {
 			<FilterModal
 				open={openFilter}
 				closeFilter={setOpenFilter}
+				onProcess={onProcess}
+				onClear={onClear}
 			/>
 			<BoardHeader className={classes.header} openFilter={setOpenFilter} />
-			<BoardBody className={classes.body} dataForDrow={dataForDrow} />
+			<BoardBody className={classes.body} data={data} />
 		</div>
 	);
 }

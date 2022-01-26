@@ -1,15 +1,27 @@
-import { useState, memo } from 'react';
+import { memo, useMemo } from 'react';
 import BoardEmptyBody from './BoardEmptyBody';
-
+import AvailabilityInfo from './AvailabilityInfo';
+const style = {
+	height: "100%",
+	width: "100%",
+	display: 'flex',
+	justifyContent: "center",
+	alignItems: "center"
+}
 function BoardBody(props) {
-	const [isDataEmpty/*, setIsDataEmpty*/] = useState(true)
+	const isDataEmpty = useMemo(() => {
+		if (Array.isArray(props.data) && props.data.length > 0) {
+			return false
+		}
+		return true
+	}, [props.data])
 	console.log("Render: BoardBody");
 	return (
-		<div className={props.className}>
+		<div style={style}>
 			{
 				isDataEmpty
-					? <BoardEmptyBody isLoading={false} />
-					: "Data"
+					?	<BoardEmptyBody isLoading={false} />
+					:	<AvailabilityInfo data={props.data}/>
 			}
 		</div>
 	)

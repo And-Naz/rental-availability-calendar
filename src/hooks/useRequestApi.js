@@ -1,14 +1,15 @@
-import { useState, useMemo, useEffect, useCallback } from "react";
+import { useState, useMemo, useEffect, useCallback, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux"
-import { actionSetCurrentRecords } from "../store/ReduxActions";
+import { actionSetCurrentRecords, actionSetCurrentRecordsSync } from "../store/ReduxActions";
 import Request from "../api/Request"
 import apiInterFace from "../api/apiInterface"
 const getFilter = state => state.filter;
 const getCurrentRecords = state => state.records.current;
 function useRequestApi(defaultChuncks = [0, 99]) {
+	const plugRef = useRef(true)
 	const dispatch = useDispatch()
-	const records = useSelector(getCurrentRecords)
 	const filter = useSelector(getFilter)
+	const records = useSelector(getCurrentRecords)
 	const [initApi] = useState(new Request(apiInterFace, filter))
 	const api = useMemo(() => initApi.Update(filter), [filter])
 	const [status, setStatus] = useState(api.Status)
@@ -19,9 +20,15 @@ function useRequestApi(defaultChuncks = [0, 99]) {
 	useEffect(() => {
 		dispatch(actionSetCurrentRecords(api.Load(...chuncks)))
 	}, [chuncks, filter])
+	useEffect(() => {
+		if (plugRef.current) {
+			plugRef.current = false
+			dispatch(actionSetCurrentRecordsSync([]))	
+		}
+	}, [])
 	useEffect(() => { setStatus(api.Status) }, [api.Status, chuncks, filter])
 	return {
-		records,
+		records: plugRef.current ? [] : records,
 		status,
 		load,
 		getErrorStack,

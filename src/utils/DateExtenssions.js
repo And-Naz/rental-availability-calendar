@@ -14,25 +14,25 @@ function $formatDate(format = "MM/DD/YYYY") {
 		s: this.getSeconds().toString(),
 		ss: this.getSeconds().toString().padStart(2, '0'),
 	}
-	return format.replace(/MM|M|DD|D|YYYY|YY|hh|h|mm|m|s|ss/gi, matched => map[matched])
+	return format.replace(/MM|M|DD|D|YYYY|YY|hh|h|mm|m|ss|s/gi, matched => map[matched])
 }
 function $getWeekdayName() {
 	return new Intl.DateTimeFormat('en-US', { weekday: 'long' }).format(this)
 }
 function $dayAddedDate(days) {
 	let newDate = new Date(this.valueOf());
-	this.setDate(newDate.getDate() + days);
-	return this;
+	newDate.setDate(newDate.getDate() + days);
+	return newDate;
 }
 function $GenerateDateRange(date, addition) {
 	return Array.apply(null, { length: addition }).map((_, i) => {
-		return $dayAddedDate(date, i)
+		return date.$dayAddedDate(i)
 	})
 }
 function $GenerateDateRangeToEndDate(date, endDate) {
-	let addition = Math.floor((endDate - date) / (1000 * 60 * 60 * 24)) + 1
+	let addition = Math.ceil((endDate - date) / (1000 * 60 * 60 * 24))
 	let tmpDateRange = Array.apply(null, { length: addition }).map((_, i) => {
-		return $dayAddedDate(date, i)
+		return date.$dayAddedDate(i)
 	})
 	return tmpDateRange.filter(d => d <= endDate)
 }

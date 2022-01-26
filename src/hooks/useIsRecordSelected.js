@@ -10,9 +10,6 @@ function useIsRecordSelected() {
 		if (selectBy === OrdersType.value) {
 			return -1 < selected.findIndex(s => s.OrderNbr === order)
 		}
-		if (selectBy === ItemsType.value) {
-			// Comming Soon
-		}
 		return false
 	}, [selectBy, selected])
 	const checkItem = useCallback((item, order) => {
@@ -22,7 +19,7 @@ function useIsRecordSelected() {
 			return -1 < selected[index].Lines.findIndex(l => l.LineNbr.toString() === item.toString())
 		}
 		if (selectBy === ItemsType.value) {
-			// Comming Soon
+			return -1 < selected.findIndex(l => l.InventoryCD === item)
 		}
 		return false
 	}, [selectBy, selected])
@@ -30,12 +27,14 @@ function useIsRecordSelected() {
 		if (selectBy === OrdersType.value) {
 			const orderIndex = selected.findIndex(s => s.OrderNbr === order)
 			if (orderIndex === -1) { return false }
-			const itemIndex = selected[orderIndex].Lines.findIndex(l => l.LineNbr.toString() === item.toString())
+			const itemIndex = selected[orderIndex].Lines.findIndex(l => l.LineNbr.toString() === item.toString() && l.IsSerial)
 			if (itemIndex === -1) { return false }
 			return -1 < selected[orderIndex].Lines[itemIndex].SerialsInfo.findIndex(si => si.SerialNbr === serial)
 		}
 		if (selectBy === ItemsType.value) {
-			// Comming Soon
+			const itemIndex = selected.findIndex(l => l.InventoryCD === item && l.IsSerial)
+			if (itemIndex === -1) { return false }
+			return -1 < selected[itemIndex].SerialsInfo.findIndex(si => si.SerialNbr === serial)
 		}
 		return false
 	}, [selectBy, selected])

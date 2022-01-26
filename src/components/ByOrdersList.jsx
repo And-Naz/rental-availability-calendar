@@ -11,14 +11,14 @@ import { OrdersType } from "../constants/SelectBy"
 import {
 	actionAddOrderInSelectedRecords, actionRemoveOrderFromSelectedRecords,
 	actionAddItemInSelectedRecords, actionRemoveItemFromSelectedRecords,
-	actionAddSerialInSelectedRecords, actionRemoveSerialFromSelectedRecords
+	actionAddSerialInSelectedRecords, actionRemoveSerialFromSelectedRecords, actionSetCurrentRecords
 } from "../store/ReduxActions";
 function ByOrdersList(props) {
 	const dispatch = useDispatch()
 	const steps = 50;
 	const [chuncks, setChuncks] = useState([0, 49])
 	const goToPage = useCallback(page => setChuncks([steps * page, (steps * (page + 1)) - 1]), [])
-	const { records, status, errorStack, getTotalCount, load } = useRequestApi(chuncks)
+	const { records, status, getTotalCount, load } = useRequestApi(chuncks)
 	const [activeOrder, setActiveOrder] = useState(null)
 	const [activeItem, setActiveItem] = useState(null)
 	const [activeSerial, setActiveSerial] = useState(null)
@@ -48,7 +48,7 @@ function ByOrdersList(props) {
 				dispatch(actionRemoveOrderFromSelectedRecords(rec))
 			}
 		}
-	}, [records])
+	}, [records, dispatch])
 	const onItemsListClick = useCallback(e => {
 		let checkInState = false
 		let value = null
@@ -71,7 +71,7 @@ function ByOrdersList(props) {
 				dispatch(actionRemoveItemFromSelectedRecords({ selectBy: OrdersType, data: rec, order: activeOrder }))
 			}
 		}
-	}, [activeOrder])
+	}, [activeOrder, dispatch])
 	const onSerialsListClick = useCallback(e => {
 		let checkInState = false
 		let value = null
@@ -94,12 +94,11 @@ function ByOrdersList(props) {
 				dispatch(actionRemoveSerialFromSelectedRecords({ selectBy: OrdersType, data: rec, order: activeOrder, item: activeItem }))
 			}
 		}
-	}, [activeOrder, activeItem, activeSerial])
+	}, [activeOrder, activeItem, activeSerial, dispatch])
 	const isOrderChecked = useCallback((orderValue) => checkOrder(orderValue), [checkOrder])
 	const isItemChecked = useCallback((itemValue) => checkItem(itemValue, activeOrder), [checkItem, activeOrder])
 	const isSerialChecked = useCallback((serialValue) => checkSerial(serialValue, activeItem, activeOrder), [checkSerial, activeOrder, activeItem])
 	const selectAllOrders = useCallback((e) => {
-		console.log(e.target.checked);
 		if (e.target.checked) {
 			records.forEach(o => {
 				dispatch(actionAddOrderInSelectedRecords(o.OrderNbr))
@@ -109,9 +108,8 @@ function ByOrdersList(props) {
 				dispatch(actionRemoveOrderFromSelectedRecords(o.OrderNbr))
 			})
 		}
-	}, [records])
+	}, [records, dispatch])
 	const selectAllItems = useCallback((e) => {
-		console.log(e.target.checked);
 		if (e.target.checked) {
 			lines.forEach(l => {
 				dispatch(actionAddItemInSelectedRecords({ selectBy: OrdersType, data: l.LineNbr.toString(), order: activeOrder }))
@@ -121,9 +119,8 @@ function ByOrdersList(props) {
 				dispatch(actionRemoveItemFromSelectedRecords({ selectBy: OrdersType, data: l.LineNbr.toString(), order: activeOrder }))
 			})
 		}
-	}, [lines, activeOrder])
+	}, [lines, activeOrder, dispatch])
 	const selectAllSerials = useCallback((e) => {
-		console.log(e.target.checked);
 		if (e.target.checked) {
 			serials.forEach(s => {
 				dispatch(actionAddSerialInSelectedRecords({ selectBy: OrdersType, data: s.SerialNbr, order: activeOrder, item: activeItem }))
@@ -133,7 +130,7 @@ function ByOrdersList(props) {
 				dispatch(actionRemoveSerialFromSelectedRecords({ selectBy: OrdersType, data: s.SerialNbr, order: activeOrder, item: activeItem }))
 			})
 		}
-	}, [serials, activeOrder, activeItem])
+	}, [serials, activeOrder, activeItem, dispatch])
 	const isAllOrdersSelected = useIsAllSelected(records)
 	const isAllItemsSelected = useIsAllSelected(lines, selected => {
 		return selected.find(o => o.OrderNbr === activeOrder)?.Lines
@@ -144,6 +141,11 @@ function ByOrdersList(props) {
 		?.Lines.find(l => l.LineNbr.toString() === activeItem.toString())
 		?.SerialsInfo
 	}, [activeOrder, activeItem])
+	useEffect(() => {
+		return () => {
+			dispatch(actionSetCurrentRecords([]))
+		}
+	}, [dispatch])
 	return (
 		<>
 			<PaginatedList
@@ -165,7 +167,7 @@ function ByOrdersList(props) {
 				active={activeItem}
 				onListClick={onItemsListClick}
 				pages={(Array.isArray(lines) && lines.length <= steps) ? 0 : Math.ceil(lines.length / steps)}
-				goToPage={Function.prototype}
+				goToPage={Function.prototype} // TODO: Support pagination
 				keyName="LineNbr"
 				displayName="InventoryCD"
 				isCheckedFunc={isItemChecked}
@@ -178,7 +180,7 @@ function ByOrdersList(props) {
 				active={activeSerial}
 				onListClick={onSerialsListClick}
 				pages={(Array.isArray(serials) && serials.length <= steps) ? 0 : Math.ceil(serials.length / steps)}
-				goToPage={Function.prototype}
+				goToPage={Function.prototype} // TODO: Support pagination
 				keyName="SerialNbr"
 				displayName="SerialNbr"
 				isCheckedFunc={isSerialChecked}

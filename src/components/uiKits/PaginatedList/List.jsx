@@ -27,7 +27,7 @@ function List(props) {
 								<li
 									key={rec[keyName]}
 									data-rec={rec[keyName]}
-									className={active === rec[keyName].toString() ? "list__items--active" : null}
+									className={(active && active === rec[keyName]?.toString()) ? "list__items--active" : null}
 								>
 									<Checkbox checked={isCheckedFunc(rec[keyName])} /> {/* onChange={onChangeCheckbox} */}
 									<span className="list__items__text">{rec[displayName]}</span>

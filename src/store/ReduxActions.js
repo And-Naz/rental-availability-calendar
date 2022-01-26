@@ -15,3 +15,6 @@ export const actionAddSerialInSelectedRecords = Synchronous(Types.AddSerialInSel
 export const actionRemoveSerialFromSelectedRecords = Synchronous(Types.RemoveSerialFromSelectedRecords);
 
 export const actionSetCurrentRecords = Asynchronous(Types.SetCurrentRecords);
+export const actionSetCurrentRecordsSync = Synchronous(Types.SetCurrentRecordsSync);
+
+export const actionSetShowOnlyAvailable = Synchronous(Types.SetShowOnlyAvailable);
