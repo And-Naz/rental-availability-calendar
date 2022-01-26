@@ -65,6 +65,72 @@ const staticObject = {
 			acc[key] = value
 			return acc
 		}, {})
+	},
+	helpers: {
+		getOrderInfoOfItems: async function(filter, items) {//(startDate, endDate, radioValue, selectedList) {
+			const params = { startDateStr: '', endDateStr: '', allowShipped: false, allowNotShipped: false, allOpened: false, itemInfoList: []}
+			const orders = items.reduce((acc, itemsInfo) => {
+				const itemOrders = ByOrders.filter(ord => {
+					if(ord.Status !== filter.orderStatus) {return false}
+					const newLines = ord.Lines.filter(l => {
+						if (l.InventoryCD !== itemsInfo.InventoryCD) {
+							return false
+						}
+						if(l.StartDateTime >= filter.startDate) {
+							return false
+						}
+						if(l.EndDateTime <= filter.endDate) {
+							return false
+						}
+						return true
+					})
+					if(newLines.length === 0) { return false }
+					return {...ord, Lines: newLines}
+				})
+				if(itemOrders.length > 0) {
+					return acc.concat(itemOrders)
+				}
+				return acc
+			}, []);
+			
+			return orders
+			// if (startDate instanceof Date) {
+			//    params.startDateStr = FormatDate(startDate, "YYYY-MM-DD")
+			// } else if (typeof startDate === "string") {
+			//    params.startDateStr = startDate
+			// } else {
+			//    return []
+			// }
+			// if (endDate instanceof Date) {
+			//    params.endDateStr = FormatDate(endDate, "YYYY-MM-DD")
+			// } else if (typeof endDate === "string") {
+			//    params.startDateStr = endDate
+			// } else {
+			//    return []
+			// }
+			// switch (radioValue) {
+			//    case "1":
+			// 	  params.allOpened = true
+			// 	  break;
+			//    case "2":
+			// 	  params.allowShipped = true
+			// 	  break;
+			//    case "3":
+			// 	  params.allowNotShipped = true
+			// 	  break;       
+			//    default:
+			// 	  params.allOpened = true
+			// 	  break;
+			// }
+			// if (!Array.isArray(selectedList)) {
+			//    return [];
+			// } else {
+			//    params.itemInfoList = selectedList
+			// }
+			// let retVal =  await axios.post(this.UrlGeneration("GetRentalItemsOrders"), params, this.Configs)
+			// 		 .then(response => response.data.d)
+			// return retVal
+		}
 	}
 }
 export default staticObject;

@@ -151,6 +151,12 @@ class Request {
 	#startDate = Date.$Current;
 	#endDate = Date.$Current.$dayAddedDate(31);
 	#filterByContent = "";
+	get helpers() {
+		if ('helpers' in this.#apiInterface) {
+			return this.#apiInterface['helpers']
+		}
+		return null
+	}
 	get Filter() {
 		return {
 			selectBy: this.SelectBy,
