@@ -5,17 +5,17 @@ const AcuRNT = {
 		return window.location.origin + window.location.pathname + '/' + url
 	},
 	loadRecords: async function (filter, start = this.initStart, end = this.initEnd) {
-		const keys = this._getKeys(filter)
-		console.log(keys);
+		const _filter = this._getKeys(filter)
+		console.log(_filter);
 		console.log(`start ${start} end ${end}`);
-		const retVal = await axios.post(this.UrlGeneration("LoadRecords"), { filter, start, end }, this.Configs)
+		const retVal = await axios.post(this.UrlGeneration("LoadRecords"), { filter: _filter, start, end }, this.Configs)
 		console.log(retVal);
 		return []
 	},
 	recordsTotalCount: async function (filter) {
-		const keys = this._getKeys(filter)
-		console.log(keys);
-		const retVal = await axios.post(this.UrlGeneration("RecordsTotalCount"), {filter}, this.Configs)
+		const _filter = this._getKeys(filter)
+		console.log(_filter);
+		const retVal = await axios.post(this.UrlGeneration("RecordsTotalCount"), {filter: _filter}, this.Configs)
 		console.log(retVal);
 		return []
 	},
@@ -30,7 +30,9 @@ const AcuRNT = {
 	},
 	helpers: {
 		getOrderInfoOfItems: async function (filter, items) {
-			const retVal = await axios.post(this.UrlGeneration("GetOrderInfoOfItems"), { filter, items }, this.Configs)
+			const _filter = this._getKeys(filter)
+			console.log(_filter);
+			const retVal = await axios.post(this.UrlGeneration("GetOrderInfoOfItems"), { filter: _filter, items }, this.Configs)
 			console.log(retVal);
 			return []
 		}
