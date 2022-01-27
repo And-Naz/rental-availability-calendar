@@ -8,14 +8,14 @@ const AcuRNT = {
 		const keys = this._getKeys(filter)
 		console.log(keys);
 		console.log(`start ${start} end ${end}`);
-		const retVal = await axios.post(this.UrlGeneration("LoadRecords"), { ...filter, start, end }, this.Configs)
+		const retVal = await axios.post(this.UrlGeneration("LoadRecords"), { filter, start, end }, this.Configs)
 		console.log(retVal);
 		return []
 	},
 	recordsTotalCount: async function (filter) {
 		const keys = this._getKeys(filter)
 		console.log(keys);
-		const retVal = await axios.post(this.UrlGeneration("RecordsTotalCount"), filter, this.Configs)
+		const retVal = await axios.post(this.UrlGeneration("RecordsTotalCount"), {filter}, this.Configs)
 		console.log(retVal);
 		return []
 	},
