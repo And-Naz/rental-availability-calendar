@@ -30,10 +30,10 @@ function useDrowInfo() {
             })
             .then(response => {
                 return response.reduce((acc, {status, value}) => {
-                    if (value.length === 0) {
+                    if (status !== "fulfilled") {
                         return acc
                     }
-                    if (status !== "fulfilled") {
+                    if (!Array.isArray(value) || value.length === 0) {
                         return acc
                     }
                     value.forEach(order => {
