@@ -152,10 +152,7 @@ class Request {
 	#endDate = Date.$Current.$dayAddedDate(31);
 	#filterByContent = "";
 	get helpers() {
-		if ('helpers' in this.#apiInterface) {
-			return this.#apiInterface['helpers']
-		}
-		return null
+		return this.#apiInterface['helpers']
 	}
 	get Filter() {
 		return {

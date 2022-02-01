@@ -26,6 +26,7 @@ function useDrowInfo() {
             }
             Promise.allSettled(promiseArray)
             .then(response => {
+                console.log(response)
                 return response
             })
             .then(response => {
@@ -52,7 +53,10 @@ function useDrowInfo() {
                 return [...map.values()]
             })
             .then(orders => {
-                setData(GenerateItemList(orders))
+                console.log(orders);
+                const getInfo = GenerateItemList(orders)
+                console.log(getInfo);
+                setData(getInfo)
             })
         }
     }, [selected])
