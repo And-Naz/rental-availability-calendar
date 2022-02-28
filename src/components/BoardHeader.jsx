@@ -25,7 +25,6 @@ function BoardHeader(props) {
 	const dispatch = useDispatch()
 	const showOnlyAvailable = useSelector(getShowOnlyAvailable)
 	const changeShowOnlyAvailable = useCallback(e => dispatch(actionSetShowOnlyAvailable(e.target.checked)), [dispatch])
-	console.log("Render: BoardHeader");
 	return (
 		<div className={props.className}>
 			<AppBar position="static">

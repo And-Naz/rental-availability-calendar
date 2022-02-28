@@ -63,7 +63,6 @@ const boxStyle = {
 
 function FilterModal(props) {
 	const classes = useStyles()
-	console.log("Render: FilterModal");
 	return (
 		<div>
 			<Modal
@@ -106,6 +105,7 @@ function FilterModal(props) {
 							<Button
 								variant="contained"
 								color="primary"
+								disabled={props.isProcessButtonDisable}
 								onClick={e => {
 									props.onProcess()
 									props.closeFilter()
@@ -118,7 +118,6 @@ function FilterModal(props) {
 								color="primary"
 								onClick={e => {
 									props.onClear()
-									props.closeFilter()
 								}}
 							>
 								Clear

@@ -7,7 +7,6 @@ export default function StartDate() {
     const value = useSelector(getStart)
     const dispatch = useDispatch()
     const onChange = useCallback(e => dispatch(actionSetStartDate(new Date(e.target.value))), [dispatch])
-    console.log("Render: StartDate");
     return (
         <DatePicker value={value} onChange={onChange} label="Start Date" />
     )

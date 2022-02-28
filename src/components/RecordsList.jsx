@@ -13,7 +13,6 @@ function RecordsList() {
 	useLayoutEffect(() => {
 		dispatch(actionSetCurrentRecordsSync([]))
 	}, [selectBy, dispatch])
-	console.log("Render: RecordsList");
 	return (
 		<div style={{ display: "flex", flexDirection: "row", width: "100%" }}>
 			{

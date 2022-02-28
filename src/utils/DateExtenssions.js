@@ -36,9 +36,13 @@ function $GenerateDateRangeToEndDate(date, endDate) {
 	})
 	return tmpDateRange.filter(d => d <= endDate)
 }
+function $GetDateDifferenceByDay(dateStart, dateEnd) {
+	return Math.ceil(((((dateEnd - dateStart) / 1000) / 60) / 60) / 24)
+}
 Object.defineProperty(Date.prototype, "$formatDate", { value: $formatDate })
 Object.defineProperty(Date.prototype, "$getWeekdayName", { value: $getWeekdayName })
 Object.defineProperty(Date.prototype, "$dayAddedDate", { value: $dayAddedDate })
 Object.defineProperty(Date, "$GenerateDateRange", { value: $GenerateDateRange })
 Object.defineProperty(Date, "$GenerateDateRangeToEndDate", { value: $GenerateDateRangeToEndDate })
+Object.defineProperty(Date, "$GetDateDifferenceByDay", { value: $GetDateDifferenceByDay })
 Object.defineProperty(Date, "$Current", { get: () => new Date() })

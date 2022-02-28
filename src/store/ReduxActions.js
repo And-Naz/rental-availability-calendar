@@ -5,6 +5,7 @@ export const actionSetOrderStatus = Synchronous(Types.SetOrderStatus);
 export const actionSetStartDate = Synchronous(Types.SetStartDate);
 export const actionSetEndDate = Synchronous(Types.SetEndDate);
 export const actionSetFilterByContent = Synchronous(Types.SetFilterByContent);
+export const actionSetFilter = Synchronous(Types.SetFilter);
 
 export const actionSetSelectedRecords = Synchronous(Types.SetSelectedRecords);
 export const actionAddOrderInSelectedRecords = Synchronous(Types.AddOrderInSelectedRecords);

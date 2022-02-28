@@ -27,9 +27,8 @@ const useStyles = makeStyles((theme) => ({
 
 function Board(props) {
 	const classes = useStyles();
-	const {data, onProcess, onClear} = useDrowInfo()
 	const [openFilter, setOpenFilter] = useToggle(true);
-	console.log("Render: Board");
+	const {data, onProcess, onClear, isProcessButtonDisable} = useDrowInfo(setOpenFilter)
 	return (
 		<div className={classes.board}>
 			<FilterModal
@@ -37,6 +36,7 @@ function Board(props) {
 				closeFilter={setOpenFilter}
 				onProcess={onProcess}
 				onClear={onClear}
+				isProcessButtonDisable={isProcessButtonDisable}
 			/>
 			<BoardHeader className={classes.header} openFilter={setOpenFilter} />
 			<BoardBody className={classes.body} data={data} />

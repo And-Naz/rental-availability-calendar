@@ -7,11 +7,6 @@ function InfoBody(props) {
     return (
         <div className='info__body'>
             {
-                // data.map(itemInfo => {
-                //     return (
-                //         <InfoRow key={itemInfo.InventoryCD} startText={itemInfo.InventoryCD} displayList={[]}/>
-                //     )
-                // })
                 data.map(item => {
                     const displaInfoComponents = dateRange.map(dr => {
                         return (<DisplayInfo key={item.InventoryCD + dr.toISOString()} date={dr} item={item} showOnlyAvailable={false}/>)

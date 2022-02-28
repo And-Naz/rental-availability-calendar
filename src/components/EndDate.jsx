@@ -7,7 +7,6 @@ export default function EndDate() {
     const value = useSelector(getEnd)
     const dispatch = useDispatch()
     const onChange = useCallback(e => dispatch(actionSetEndDate(new Date(e.target.value))), [dispatch])
-    console.log("Render: EndDate");
     return (
         <DatePicker value={value} onChange={onChange} label="End Date" />
     )

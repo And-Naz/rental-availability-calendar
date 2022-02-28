@@ -3,6 +3,7 @@ export const SetOrderStatus = Symbol("SetOrderStatus");
 export const SetStartDate = Symbol("SetStartDate");
 export const SetEndDate = Symbol("SetEndDate");
 export const SetFilterByContent = Symbol("SetFilterByContent");
+export const SetFilter = Symbol("SetFilter");
 export const SetCurrentRecords = Symbol("SetCurrentRecords");
 export const SetCurrentRecordsSync = Symbol('SetCurrentRecordsSync')
 export const SetSelectedRecords = Symbol("SetSelectedRecords");

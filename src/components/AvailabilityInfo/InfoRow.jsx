@@ -8,7 +8,6 @@ function InfoRow(props) {
             {
                 (Array.isArray(displayList) && displayList.length > 0) &&
                 displayList.map((dl, key) => {
-                    console.log();
                     return (
                         <InfoCell
                             key={key}

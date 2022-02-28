@@ -13,7 +13,6 @@ export default function SelectBy() {
         dispatch(actionSetSelectedRecords([]))
     }, [])
     const list = useMemo(() => Object.keys(SelectByConstants).map(sbKeys => SelectByConstants[sbKeys]), [])
-    console.log("Render: SelectBy");
     return (
         <SelectOption value={value} onChange={onChange} list={list} label="Select By"/>
     )

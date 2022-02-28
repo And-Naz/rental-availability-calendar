@@ -1,34 +1,34 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import {useSelector} from "react-redux"
+import {useDispatch, useSelector} from "react-redux"
+import {actionSetFilter} from "../store/ReduxActions"
 import {OrdersType} from "../constants/SelectBy";
 import GenerateItemList from "../helpers/GenerateItemList"
 import {getOrderInfoOfItems} from "../api"
+import useAutoLoad from "./useAutoLoad";
 function getState(state) {
     return [state.filter, state.records.selected]
 }
-function useDrowInfo() {
+function useDrowInfo(openFilter) {
     const [filter, selected] = useSelector(getState)
-    const {selectBy} = filter
+    const {selectBy, isProcessButtonDisable} = filter
     const [data, setData] = useState([])
-    const onProcess = useCallback(() => {
+    const dispatch = useDispatch()
+    
+    const onProcess = useCallback((argArray = selected) => {
         if (selectBy === OrdersType.value) {
-            setData(GenerateItemList(selected))
+            setData(GenerateItemList(argArray))
         } else {
-            const len = selected.length
+            const len = argArray.length
             const steps = 50
             let chuncks
             const chuncksCount = Math.ceil(len / steps)
             const promiseArray = []
             for (let i = 0; i < chuncksCount; i++) {
                 chuncks = [steps * i, steps * (i + 1) - 1]
-                promiseArray.push(getOrderInfoOfItems(filter, selected.slice(...chuncks)))
+                promiseArray.push(getOrderInfoOfItems(filter, argArray.slice(...chuncks)))
             }
             Promise.allSettled(promiseArray)
-            .then(response => {
-                console.log(response)
-                return response
-            })
             .then(response => {
                 return response.reduce((acc, {status, value}) => {
                     if (status !== "fulfilled") {
@@ -53,23 +53,24 @@ function useDrowInfo() {
                 return [...map.values()]
             })
             .then(orders => {
-                console.log(orders);
                 const getInfo = GenerateItemList(orders)
-                console.log(getInfo);
                 setData(getInfo)
             })
         }
     }, [selected])
     const onClear = useCallback(() => {
         setData([])
+        dispatch(actionSetFilter())
     }, [])
     useEffect(() => {
         setData([])
     }, [selectBy, selected])
+    const isAutoLoaded = useAutoLoad(setData, filter, () => openFilter(false))
     return {
         data,
         onProcess,
-        onClear
+        onClear,
+        isProcessButtonDisable
     }
 }
 

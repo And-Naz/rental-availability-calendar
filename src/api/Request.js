@@ -91,63 +91,12 @@ class Request {
 		}, "").slice(0, -1)
 		return key
 	}
-	#takeCacheInfo = async (cacheKey, start, end) => {
-		let needDoRequest = null
-		let requestStart = start;
-		let requestEnd = end;
-		let cacheStart = start;
-		let cacheEnd = end;
-		let inCacheExistsChunck = null;
-		let cacheSize = 0;
-		this.#totalCount = await this.RecordsTotalCount()
-		if (this.#cache[cacheKey] instanceof Map) {
-			cacheSize = this.#cache[cacheKey].size
-			switch (true) {
-				case cacheSize > 0 && cacheSize <= this.#totalCount:
-					if (end <= cacheSize - 1) {
-						inCacheExistsChunck = true
-						needDoRequest = false
-						break;
-					}
-					if (start <= cacheSize - 1) {
-						inCacheExistsChunck = true
-						needDoRequest = true
-						cacheEnd = cacheSize - 1
-						requestStart = cacheSize
-						break;
-					}
-					if (start > cacheSize - 1) {
-						inCacheExistsChunck = false
-						needDoRequest = true
-						break;
-					}
-					break;
-				/*case cacheSize > totalCount: break;*/
-				/* TODO: Update cache */
-				default:
-					inCacheExistsChunck = false
-					needDoRequest = true
-					break;
-			}
-		} else {
-			this.#cache[cacheKey] = new Map()
-			needDoRequest = true
-			inCacheExistsChunck = false
-		}
-		return {
-			requestStart, requestEnd, needDoRequest,
-			cacheStart, cacheEnd, cacheSize, inCacheExistsChunck
-		}
-	}
 	#errorsStack = [];
 	#status = Request.Statuses.Empty;
 	#apiInterface = null;
-	#cache = {};
 	#totalCount = 0
 	#selectBy = SelectBy.OrdersType.value;
 	#orderStatus = OrderStatuses.NotShipped.value;
-	#lastLoadChunckStart = null;
-	#lastLoadChunckEnd = null;
 	#startDate = Date.$Current;
 	#endDate = Date.$Current.$dayAddedDate(31);
 	#filterByContent = "";
@@ -171,35 +120,27 @@ class Request {
 	set SelectBy(value) {
 		this.#validate([this.#validateSelectedBy(value)], [Request.Errors.InvalidSelectBy])
 		this.#selectBy = value;
-		this.cleanPositions()
 	};
 	get OrderStatus() { return this.#orderStatus; };
 	set OrderStatus(value) {
 		this.#validate([this.#validateOrderStatus(value)], [Request.Errors.InvalidOrderStatus])
 		this.#orderStatus = value;
-		this.cleanPositions()
 	};
 	get StartDate() { return this.#startDate; };
 	set StartDate(value) {
 		this.#validate([this.#validateStartDate(value)], [Request.Errors.InvalidStartDate])
 		this.#startDate = value;
-		this.cleanPositions()
 	};
 	get EndDate() { return this.#endDate; };
 	set EndDate(value) {
 		this.#validate([this.#validateEndDate(value)], [Request.Errors.InvalidEndDate])
 		this.#startDate = value;
-		this.cleanPositions()
 	};
 	get FilterByContent() { return this.#filterByContent }
 	set FilterByContent(value) {
 		this.#validate([this.#validateFilterByContent(value)], [Request.Errors.InvalidFilterByContent])
 		this.#filterByContent = value;
-		this.cleanPositions()
 	}
-	get LastLoadChunckStart() { return this.#lastLoadChunckStart }
-
-	get LastLoadChunckEnd() { return this.#lastLoadChunckEnd }
 
 	constructor(apiInterface, filter = {}) {
 		this.#apiInterface = apiInterface;
@@ -211,14 +152,8 @@ class Request {
 			if ("filterByContent" in filter) { this.FilterByContent = filter.filterByContent }
 		}
 	};
-	cleanPositions() {
-		this.#lastLoadChunckStart = null;
-		this.#lastLoadChunckEnd = null;
-	};
 	clean() {
-		this.#cache = {};
 		this.#status = Request.Statuses.Empty;
-		this.cleanPositions()
 	}
 	Update(filter) {
 		this.SelectBy = filter.selectBy
@@ -262,30 +197,11 @@ class Request {
 		let requestData = [];
 		const currentKey = this.#createCacheKey()
 		const mapKeyName = this.SelectBy === SelectBy.OrdersType.value ? "OrderNbr" : "InventoryCD";
-		const cacheInfo = await this.#takeCacheInfo(currentKey, start, end)
-		if (cacheInfo.inCacheExistsChunck) {
-			const dataFromCache = [...this.#cache[currentKey].values()].reduce((acc, elem, index) => {
-				if (cacheInfo.cacheStart <= index && index <= cacheInfo.cacheEnd) {
-					acc.push(elem)
-				}
-				return acc
-			}, [])
-			if (dataFromCache.length > 0) {
-				retVal = retVal.concat(dataFromCache)
-			}
+		requestData = await this.#apiInterface.loadRecords(currentKey, start, end);
+		if (requestData.length > 0) {
+			retVal = retVal.concat(requestData)
 		}
-		if (cacheInfo.needDoRequest) {
-			requestData = await this.#apiInterface.loadRecords(currentKey, cacheInfo.requestStart, cacheInfo.requestEnd);
-			if (requestData.length > 0) {
-				requestData.forEach(d => {
-					this.#cache[currentKey].set(d[mapKeyName], d);
-				})
-				retVal = retVal.concat(requestData)
-			}
-		}
-		this.#lastLoadChunckStart = start;
-		this.#lastLoadChunckEnd = end;
-		if (!cacheInfo.inCacheExistsChunck && Array.isArray(retVal) && !retVal.length && !requestData.length) {
+		if (Array.isArray(retVal) && !retVal.length && !requestData.length) {
 			this.#status = Request.Statuses.Finished;
 			return []
 		} else {
@@ -294,6 +210,10 @@ class Request {
 		const _filterByContent = this.FilterByContent.toLowerCase()
 		return retVal.filter(d => {
 			return d[mapKeyName].toLowerCase().includes(_filterByContent)
+		}).sort(function(a, b){
+			if(a[mapKeyName] < b[mapKeyName]) { return -1; }
+			if(a[mapKeyName] > b[mapKeyName]) { return 1; }
+			return 0;
 		})
 	}
 };

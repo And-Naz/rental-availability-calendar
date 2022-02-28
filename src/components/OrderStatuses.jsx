@@ -9,7 +9,6 @@ export default function OrderStatuses() {
     const dispatch = useDispatch()
     const onChange = useCallback(e => dispatch(actionSetOrderStatus(e.target.value)), [dispatch])
     const list = useMemo(() => Object.keys(OrderStatusesConstants).map(osKeys => OrderStatusesConstants[osKeys]), [])
-    console.log("Render: OrderStatuses");
     return (
         <RadioButtonsSection value={value} onChange={onChange} list={list} label="Order Status"/>
     )

@@ -15,7 +15,6 @@ function BoardBody(props) {
 		}
 		return true
 	}, [props.data])
-	console.log("Render: BoardBody");
 	return (
 		<div style={style}>
 			{

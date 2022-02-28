@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { OrdersType, ItemsType } from "../../../constants/SelectBy"
 const AcuRNT = {
 	Configs: { headers: { "Content-Type": "application/json" } },
 	loadRecords: async function (filter, start = this.initStart, end = this.initEnd) {
@@ -8,7 +9,6 @@ const AcuRNT = {
 			{ filter: _filter, start, end },
 			this.Configs
 		).then(response => response.data.d)
-		console.log(retVal);
 		return retVal
 	},
 	recordsTotalCount: async function (filter) {
@@ -18,7 +18,6 @@ const AcuRNT = {
 			{filter: _filter},
 			this.Configs
 		).then(response => response.data.d)
-		console.log(retVal);
 		return retVal
 	},
 	helpers: {
@@ -28,10 +27,27 @@ const AcuRNT = {
 				{ filter, items },
 				this.Configs
 			).then(response => response.data.d, console.error)
-			.finally(() => {console.log("getOrderInfoOfItems finished");})
-			console.log(retVal);
 			return retVal
 		},
+		autoLoad: async function(type, filter, payload) {
+			let url = "";
+			const requestData = {filter}
+			if (type === "order") {
+				url = UrlGeneration("GetDataByOrder")
+				requestData.orderNbr = payload
+			} else if (type === "item") {
+				url = UrlGeneration("GetDataByItem")
+				requestData.inventoryCD = payload
+			} else {
+				return []
+			}
+			const retVal = await axios.post(
+				url,
+				requestData,
+				this.Configs
+			).then(response => response.data.d, console.error)
+			return retVal || []
+		}
 	},
 }
 
