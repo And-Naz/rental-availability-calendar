@@ -1,11 +1,13 @@
 import { OrdersType } from "../../constants/SelectBy";
 import { NotShipped } from "../../constants/OrderStatuses";
-import { SetSelectedBy, SetOrderStatus, SetStartDate, SetEndDate, SetFilterByContent, SetFilter } from "../../constants/ReduxActionTypes";
+import { SetSelectedBy, SetOrderStatus, SetStartDate, SetEndDate, SetFilterByContent, SetCalendarType, SetFilter } from "../../constants/ReduxActionTypes";
+import { FILTER_DATE_TYPE } from "../../constants/FilterDateType";
 const defaultState = {
     startDate: Date.$Current,
     endDate: Date.$Current.$dayAddedDate(31),
     selectBy: OrdersType.value,
     orderStatus: NotShipped.value,
+    calendarType: FILTER_DATE_TYPE.WEEK,
     filterByContent: "",
     isProcessButtonDisable: false
 };
@@ -46,6 +48,7 @@ const filterReducer = (state = defaultState, action = defaultAction) => {
             }
             return newState_end
         };
+        case SetCalendarType: return {...state, calendarType: action.payload };
         case SetFilterByContent: return {...state, filterByContent: action.payload};
         case SetFilter: {
             if (!action.payload) {
@@ -56,9 +59,5 @@ const filterReducer = (state = defaultState, action = defaultAction) => {
         default: return state;
     }
 };
-
-function CheckDates(params) {
-    
-}
 
 export default filterReducer;

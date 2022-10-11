@@ -8,6 +8,7 @@ import SelectBy from "./SelectBy"
 import OrderStatuses from "./OrderStatuses"
 import StartDate from './StartDate';
 import EndDate from './EndDate';
+import CalendarDateType from "./CalendarDateType"
 import FilterByContent from './FilterByContent';
 import RecordsList from './RecordsList';
 
@@ -95,6 +96,9 @@ function FilterModal(props) {
 							</div>
 							<div className={classes.filterMainSubSection}>
 								<OrderStatuses />
+								<CalendarDateType />
+							</div>
+							<div className={classes.filterMainSubSection}>
 								<FilterByContent />
 							</div>
 							<div className={classes.filterMainSubSection}>
