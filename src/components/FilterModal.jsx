@@ -65,72 +65,76 @@ const boxStyle = {
 function FilterModal(props) {
 	const classes = useStyles()
 	return (
-		<div>
-			<Modal
-				aria-labelledby="transition-modal-title"
-				aria-describedby="transition-modal-description"
-				open={props.open}
-				onClose={props.closeFilter}
-				closeAfterTransition
-				BackdropComponent={Backdrop}
-				BackdropProps={{
-					timeout: 200,
-				}}
-			>
-				<Fade in={props.open}>
-					<Box sx={boxStyle}>
-						<div className={classes.filterButtonSection}>
-							<Button
-								variant="contained"
-								color="secondary"
-								onClick={props.closeFilter}
-							>
-								X
-							</Button>
-						</div>
-						<div className={classes.filterMainSection}>
-							<div className={classes.filterMainSubSection}>
-								<StartDate />
-								<EndDate />
-								<SelectBy />
-							</div>
-							<div className={classes.filterMainSubSection}>
-								<OrderStatuses />
-								<CalendarDateType />
-							</div>
-							<div className={classes.filterMainSubSection}>
-								<FilterByContent />
-							</div>
-							<div className={classes.filterMainSubSection}>
-								<RecordsList />
-							</div>
-						</div>
-						<div className={classes.filterButtonSection}>
-							<Button
-								variant="contained"
-								color="primary"
-								disabled={props.isProcessButtonDisable}
-								onClick={e => {
-									props.onProcess()
-									props.closeFilter()
-								}}
-							>
-								Process
-							</Button>
-							<Button
-								variant="contained"
-								color="primary"
-								onClick={e => {
-									props.onClear()
-								}}
-							>
-								Clear
-							</Button>
-						</div>
-					</Box>
-				</Fade>
-			</Modal>
-		</div>
+		!props.open
+			? null
+			: (
+				<div>
+					<Modal
+						aria-labelledby="transition-modal-title"
+						aria-describedby="transition-modal-description"
+						open={props.open}
+						onClose={props.closeFilter}
+						closeAfterTransition
+						BackdropComponent={Backdrop}
+						BackdropProps={{
+							timeout: 200,
+						}}
+					>
+						<Fade in={props.open}>
+							<Box sx={boxStyle}>
+								<div className={classes.filterButtonSection}>
+									<Button
+										variant="contained"
+										color="secondary"
+										onClick={props.closeFilter}
+									>
+										X
+									</Button>
+								</div>
+								<div className={classes.filterMainSection}>
+									<div className={classes.filterMainSubSection}>
+										<StartDate />
+										<EndDate />
+										<SelectBy />
+									</div>
+									<div className={classes.filterMainSubSection}>
+										<OrderStatuses />
+										<CalendarDateType />
+									</div>
+									<div className={classes.filterMainSubSection}>
+										<FilterByContent />
+									</div>
+									<div className={classes.filterMainSubSection}>
+										<RecordsList />
+									</div>
+								</div>
+								<div className={classes.filterButtonSection}>
+									<Button
+										variant="contained"
+										color="primary"
+										disabled={props.isProcessButtonDisable}
+										onClick={e => {
+											props.onProcess()
+											props.closeFilter()
+										}}
+									>
+										Process
+									</Button>
+									<Button
+										variant="contained"
+										color="primary"
+										onClick={e => {
+											props.onClear()
+										}}
+									>
+										Clear
+									</Button>
+								</div>
+							</Box>
+						</Fade>
+					</Modal>
+				</div>
+			)
 	);
 }
 

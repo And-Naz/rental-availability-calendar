@@ -1,6 +1,7 @@
 const data = [
 	{
 		"OrderNbr": "RO000109",
+		"Customer": "S-o-m-e___**___C-u-s-t-o-m-e-r",
 		"Lines": [
 			{
 				"LineNbr": 1,
@@ -88,6 +89,7 @@ const data = [
 	},
 	{
 		"OrderNbr": "RO000161",
+		"Customer": "S-o-m-e___**___C-u-s-t-o-m-e-r",
 		"Lines": [
 			{
 				"LineNbr": 1,
@@ -265,6 +267,7 @@ const data = [
 	},
 	{
 		"OrderNbr": "RO000250",
+		"Customer": "S-o-m-e___**___C-u-s-t-o-m-e-r",
 		"Lines": [
 			{
 				"LineNbr": 1,
@@ -323,6 +326,7 @@ const data = [
 	},
 	{
 		"OrderNbr": "RO000259",
+		"Customer": "S-o-m-e___**___C-u-s-t-o-m-e-r",
 		"Lines": [
 			{
 				"LineNbr": 1,
@@ -414,6 +418,7 @@ const data = [
 	},
 	{
 		"OrderNbr": "RO000267",
+		"Customer": "S-o-m-e___**___C-u-s-t-o-m-e-r",
 		"Lines": [
 			{
 				"LineNbr": 2,
@@ -695,6 +700,7 @@ const data = [
 	},
 	{
 		"OrderNbr": "RO000268",
+		"Customer": "S-o-m-e___**___C-u-s-t-o-m-e-r",
 		"Lines": [
 			{
 				"LineNbr": 1,
@@ -712,6 +718,7 @@ const data = [
 	},
 	{
 		"OrderNbr": "RO000269",
+		"Customer": "S-o-m-e___**___C-u-s-t-o-m-e-r",
 		"Lines": [
 			{
 				"LineNbr": 1,
@@ -729,6 +736,7 @@ const data = [
 	},
 	{
 		"OrderNbr": "RO000270",
+		"Customer": "S-o-m-e___**___C-u-s-t-o-m-e-r",
 		"Lines": [
 			{
 				"LineNbr": 1,
@@ -746,6 +754,7 @@ const data = [
 	},
 	{
 		"OrderNbr": "RO000271",
+		"Customer": "S-o-m-e___**___C-u-s-t-o-m-e-r",
 		"Lines": [
 			{
 				"LineNbr": 1,
@@ -763,6 +772,7 @@ const data = [
 	},
 	{
 		"OrderNbr": "RO000272",
+		"Customer": "S-o-m-e___**___C-u-s-t-o-m-e-r",
 		"Lines": [
 			{
 				"LineNbr": 1,

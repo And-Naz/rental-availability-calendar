@@ -9,6 +9,7 @@
 	justify-content: flex-start;
 	width: 15rem;
 	align-items: center;
+	flex: 1;
 }
 
 .list__select_all {

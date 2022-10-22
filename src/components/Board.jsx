@@ -13,15 +13,15 @@ const useStyles = makeStyles((theme) => ({
 		position: 'static',
 		display: 'flex',
 		flexDirection: 'column',
+		flexGrow: 1,
 	},
 	header: {
-		flexGrow: 1,
 		width: '100%',
 		height: '4rem'
 	},
 	body: {
-		height: 'calc(100vh - 4rem)',
-		width: '100%'
+		width: '100%',
+		flexGrow: 1,
 	}
 }));
 

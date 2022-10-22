@@ -4,7 +4,7 @@ import {useDispatch, useSelector} from "react-redux"
 import {actionSetFilter} from "../store/ReduxActions"
 import {OrdersType} from "../constants/SelectBy";
 import GenerateItemList from "../helpers/GenerateItemList"
-import {getOrderInfoOfItems} from "../api"
+import { getOrderInfoOfItems } from "../api"
 import useAutoLoad from "./useAutoLoad";
 function getState(state) {
     return [state.filter, state.records.selected]
@@ -17,7 +17,8 @@ function useDrowInfo(openFilter) {
     
     const onProcess = useCallback((argArray = selected) => {
         if (selectBy === OrdersType.value) {
-            setData(GenerateItemList(argArray))
+            const list = GenerateItemList(argArray)
+            setData(list)
         } else {
             const len = argArray.length
             const steps = 50
@@ -53,8 +54,8 @@ function useDrowInfo(openFilter) {
                 return [...map.values()]
             })
             .then(orders => {
-                const getInfo = GenerateItemList(orders)
-                setData(getInfo)
+                const list = GenerateItemList(orders)
+                setData(list)
             })
         }
     }, [selected])

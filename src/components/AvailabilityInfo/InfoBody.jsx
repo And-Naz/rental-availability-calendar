@@ -2,15 +2,13 @@ import { useMemo } from 'react';
 import InfoRow from './InfoRow';
 import DisplayInfo from './DisplayInfo';
 function InfoBody(props) {
-    const {data, dateRange, newDateRange} = props
-    console.log(1, dateRange);
-    console.log(2, newDateRange);
+    const {data, dateRange} = props;
     return (
         <div className='info__body'>
             {
                 data.map(item => {
-                    const displaInfoComponents = dateRange.map(dr => {
-                        return (<DisplayInfo key={item.InventoryCD + dr.toISOString()} date={dr} item={item} showOnlyAvailable={false}/>)
+                    const displaInfoComponents = dateRange.map((dr, i) => {
+                        return (<DisplayInfo key={`${item.InventoryCD} ${i}`} dateRange={dr} item={item} />)
                     })
                     return (
                         <InfoRow key={item.InventoryCD} startText={item.InventoryCD} displayList={displaInfoComponents}/>

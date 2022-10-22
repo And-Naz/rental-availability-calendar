@@ -1,12 +1,12 @@
 function GenerateItemList(rentalOrders) {
     if (!Array.isArray(rentalOrders) || rentalOrders.length === 0) {return []}
-    const ItemList = new Map()
+    const ItemList = new Map();
     rentalOrders.forEach(ro => {
         ro.Lines.forEach(item => {
             const {InventoryCD, SerialNbr, IsSerial, OnHand, AvailQty, LineNbr} = item
             const key = JSON.stringify({InventoryCD, SerialNbr, IsSerial})
             let mapOldValuesArray = ItemList.get(key)
-            let mapAdditionValue = {OrderNbr: ro.OrderNbr, ...item};
+            let mapAdditionValue = {OrderNbr: ro.OrderNbr, Customer: ro.Customer, ...item};
             delete mapAdditionValue.InventoryCD
             delete mapAdditionValue.SerialNbr
             delete mapAdditionValue.IsSerial
@@ -21,6 +21,6 @@ function GenerateItemList(rentalOrders) {
             ItemList.set(key, newData);
         })
     })
-    return [...ItemList.values()]
+    return [...ItemList.values()];
 }
 export default GenerateItemList;

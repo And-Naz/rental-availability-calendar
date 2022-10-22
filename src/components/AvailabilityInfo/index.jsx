@@ -10,7 +10,7 @@ function getFilter(state) {
 function AvailabilityInfo(props) {
     const [data, setData] = useState([])
     const {startDate, endDate, calendarType} = useSelector(getFilter)
-    const newDateRange = useMemo(() => {
+    const dateRange = useMemo(() => {
         const yearStart = startDate.getFullYear();
         const yearEnd = endDate.getFullYear();
         switch (calendarType) {
@@ -24,15 +24,13 @@ function AvailabilityInfo(props) {
         return [];
     }, [calendarType, startDate, endDate])
 
-    const [dateRange, setDateRange] = useState(Date.$GenerateDateRangeToEndDate(startDate, endDate))
-
     useEffect(() => {
         setData(props.data)
     }, [props.data])
     return (
         <div className="info">
-            <InfoHeader dateRange={dateRange} newDateRange={newDateRange} />
-            <InfoBody data={data} dateRange={dateRange} newDateRange={newDateRange} />
+            <InfoHeader dateRange={dateRange} />
+            <InfoBody data={data} dateRange={dateRange} />
         </div>
     )
 }

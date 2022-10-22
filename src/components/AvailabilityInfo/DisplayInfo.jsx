@@ -1,13 +1,13 @@
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import {useSelector} from 'react-redux'
 const getShowOnlyAvailable = state => state.options.showOnlyAvailable
-function DisplayInfo({date, item}) {
+function DisplayInfo({dateRange, item}) {
     const showOnlyAvailable = useSelector(getShowOnlyAvailable)
-    const columnDate = date.$formatDate('YYYY-MM-DD')
-    const filtredArray = item.info.filter(info => (columnDate >=  info.StartDateTime && columnDate <=  info.EndDateTime));
+    const columnDateStart = dateRange[0].$formatDate('YYYY-MM-DD')
+    const columnDateEnd = dateRange[dateRange.length - 1].$formatDate('YYYY-MM-DD')
+    const filtredArray = item.info.filter(info => (columnDateStart >=  info.StartDateTime && columnDateEnd <=  info.EndDateTime));
     const [isSerial, setIsSerial] = useState(item.IsSerial)
     const [isAvailable, setIsAvailable] = useState(item.AvailQty > 0)
-    const infoRef = useRef(null);
     const bgFree = "#65ff79";
     const bgNoFree = "#ff3d3d";
     useEffect(() => {
@@ -20,62 +20,65 @@ function DisplayInfo({date, item}) {
             style={{
                 backgroundColor: isAvailable ? bgFree : (filtredArray.length > 0)  ? bgNoFree : bgFree,
             }}
-            ref={infoRef}            
         >
             {
-                !isSerial &&
-                <div className="item-info-qty">
-                    <span>OH: {item.OnHand},</span>
-                    <span>Avl: {item.AvailQty}</span>
-                </div>
-            }
-            {
-                (isSerial && item.SerialNbr === "") &&
-                <div className="item-info-qty">
-                    <span>OH: {item.OnHand},</span>
-                    <span>Avl: {item.AvailQty}</span>
-                </div>
+                !isSerial || item.SerialNbr === ""
+                ? (
+                    <div className="item-info-qty">
+                        <span>OH: {item.OnHand},</span>
+                        <span>Avl: {item.AvailQty}</span>
+                    </div>
+                )
+                : null
             }
             {
                 (filtredArray.length > 0 && !showOnlyAvailable) &&
                 <div className="item-info-orders">
                     {
-                        (() => {
-                            switch (filtredArray.length) {
+                        ((_array) => {
+                            const array = _array.concat(_array, _array, _array, _array);
+                            console.log(array);
+                            switch (array.length) {
                                 case 1:
                                     return (
-                                        <span>R.O: {filtredArray[0].OrderNbr}-{filtredArray[0].OrderQty}</span>
+                                        <span>{`R.O.: ${array[0].OrderNbr}/${array[0].Customer}-${array[0].OrderQty}`}</span>
                                     )
                                 case 2:
                                     return (
-                                        <span>OH: {filtredArray[0].OrderNbr}-{filtredArray[0].OrderQty}, {filtredArray[1].OrderNbr}-{filtredArray[1].OrderQty}</span>
+                                        <>
+                                            <span>{`O.H.: ${array[0].OrderNbr}/${array[0].Customer}-${array[0].OrderQty}`}</span><br />
+                                            <span>{`O.H.: ${array[1].OrderNbr}/${array[1].Customer}-${array[1].OrderQty}`}</span><br />
+                                        </>
                                     )
                                 default:
                                     return (
                                         <>
-                                            <span>OH: {filtredArray[0].OrderNbr}-{filtredArray[0].OrderQty}, {filtredArray[1].OrderNbr}-{filtredArray[1].OrderQty}</span>
                                             <div className="all-orders">
-                                                <span className="popup-target" >
-                                                    Orders
-                                                    <ul className="popup">
-                                                    {
-                                                        filtredArray.map((info, i) => {
-                                                            return (
-                                                                <li
-                                                                    key={i}
-                                                                >
-                                                                    {`R.O.: ${info.OrderNbr} - Qty.: ${info.OrderQty}`}
-                                                                </li>
-                                                            )
-                                                        })
-                                                    }
-                                                    </ul>
-                                                </span>                                                
+                                                <div>{`O.H.: ${array[0].OrderNbr}/${array[0].Customer}-${array[0].OrderQty}`}</div>
+                                                <div>{`O.H.: ${array[1].OrderNbr}/${array[1].Customer}-${array[1].OrderQty}`}</div>
+                                                <div className="popup-target" >
+                                                    <div>
+                                                        Orders
+                                                        <ul className="popup">
+                                                        {
+                                                            array.map((info, i) => {
+                                                                return (
+                                                                    <li
+                                                                        key={i}
+                                                                    >
+                                                                        {`${info.OrderNbr}/${info.Customer} - ${info.OrderQty}`}
+                                                                    </li>
+                                                                )
+                                                            })
+                                                        }
+                                                        </ul>
+                                                    </div>
+                                                </div>                                   
                                             </div>                                            
                                         </>
                                     )
                             }
-                        })()                        
+                        })(filtredArray)                        
                     }
                 </div>
             }  
