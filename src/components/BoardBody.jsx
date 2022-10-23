@@ -2,11 +2,11 @@ import { memo, useMemo } from 'react';
 import BoardEmptyBody from './BoardEmptyBody';
 import AvailabilityInfo from './AvailabilityInfo';
 const style = {
-	height: "100%",
 	width: "100%",
 	display: 'flex',
 	justifyContent: "center",
-	alignItems: "center"
+	alignItems: "center",
+	marginTop: 60
 }
 function BoardBody(props) {
 	const isDataEmpty = useMemo(() => {

@@ -3,25 +3,21 @@ import CircularProgress from '@mui/material/CircularProgress';
 
 function BoardEmptyBody(props) {
 	const style = useMemo(() => ({
-		height: "100%",
-		width: "100%",
-		display: 'flex',
-		justifyContent: "center",
-		alignItems: "center"
+		position: 'absolute',
+		top: '50%',
+		left: '50%',
+		transform: 'translate(-50%, -50%)'
 	}), [])
 	return (
-			
-			!props.isLoading
-				?
-				<div>
-					<div>IIG Rental Availability Calendar.</div>
-				</div>
-				:
-				<div>
-					<div>
-						<CircularProgress />
-					</div>
-				</div>
+		!props.isLoading
+		?
+			<div style={style}>
+				<div>IIG Rental Availability Calendar.</div>
+			</div>
+		:
+			<div style={style}>
+				<CircularProgress />
+			</div>
 	)
 }
 

@@ -101,7 +101,7 @@ function FilterModal(props) {
 										<OrderStatuses />
 										<CalendarDateType />
 									</div>
-									<div className={classes.filterMainSubSection}>
+									<div className={classes.filterMainSubSection} style={{flex: 1}}>
 										<FilterByContent />
 									</div>
 									<div className={classes.filterMainSubSection}>

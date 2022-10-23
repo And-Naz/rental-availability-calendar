@@ -35,9 +35,7 @@ function DisplayInfo({dateRange, item}) {
                 (filtredArray.length > 0 && !showOnlyAvailable) &&
                 <div className="item-info-orders">
                     {
-                        ((_array) => {
-                            const array = _array.concat(_array, _array, _array, _array);
-                            console.log(array);
+                        ((array) => {
                             switch (array.length) {
                                 case 1:
                                     return (

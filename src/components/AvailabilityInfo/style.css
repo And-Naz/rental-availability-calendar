@@ -5,19 +5,16 @@
     flex-direction: column;
     justify-content: flex-start;
     padding: 0.25rem;
-    overflow: hidden;
-    overflow-x: auto;
 }
 
 .info__header {
     padding: 0.5rem 0;
-    border-bottom: 1px solid black;
 }
 .info__body {
     padding-top: 0.5rem;
     flex: 1;
-    overflow: hidden;
-    overflow-y: auto;
+    overflow-x: auto;
+    overflow-y: hidden;
     width: max-content;
 }
 

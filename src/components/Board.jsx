@@ -17,7 +17,9 @@ const useStyles = makeStyles((theme) => ({
 	},
 	header: {
 		width: '100%',
-		height: '4rem'
+		height: '4rem',
+		position: 'fixed',
+		zIndex: 1
 	},
 	body: {
 		width: '100%',
