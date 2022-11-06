@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { OrdersType, ItemsType } from "../../../constants/SelectBy"
+
 const AcuRNT = {
 	Configs: { headers: { "Content-Type": "application/json" } },
 	loadRecords: async function (filter, start = this.initStart, end = this.initEnd) {
@@ -15,7 +15,7 @@ const AcuRNT = {
 		const _filter = getKeys(filter)
 		const retVal = await axios.post(
 			UrlGeneration("RecordsTotalCount"),
-			{filter: _filter},
+			{ filter: _filter },
 			this.Configs
 		).then(response => response.data.d)
 		return retVal
@@ -29,9 +29,9 @@ const AcuRNT = {
 			).then(response => response.data.d, console.error)
 			return retVal
 		},
-		autoLoad: async function(type, filter, payload) {
+		autoLoad: async function (type, filter, payload) {
 			let url = "";
-			const requestData = {filter}
+			const requestData = { filter }
 			if (type === "order") {
 				url = UrlGeneration("GetDataByOrder")
 				requestData.orderNbr = payload
