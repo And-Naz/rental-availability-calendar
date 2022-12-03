@@ -17,7 +17,7 @@ function useIsAllSelected(displayRecords = [], findSelectedCallback = (arg) => a
             return
         }
         setValue(displayRecords.length === selectedRecords.length)
-    }, [displayRecords, selected, ...dependencies])
+    }, [displayRecords, selected, findSelectedCallback, ...dependencies])
     return value
 }
 export default useIsAllSelected

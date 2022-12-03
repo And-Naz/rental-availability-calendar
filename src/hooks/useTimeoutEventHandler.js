@@ -5,15 +5,15 @@ const defaultDelay = null;
 export default function useTimeoutEventHandler(value = defaultValue, setValue = defaultFunc, eventInstanceMutator = defaultFunc, delay = defaultDelay, defaultState = null) {
     
     const [triggeredValue, setTriggeredValue] = useState(defaultState)
-    const triggerFunction = useCallback((...args) => setTriggeredValue(prev => eventInstanceMutator(prev, ...args)), [])
+    const triggerFunction = useCallback((...args) => setTriggeredValue(prev => eventInstanceMutator(prev, ...args)), [eventInstanceMutator])
 
     const timeoutRef = useRef(null)
-    const timeoutCallback = useCallback(setValue, [])
+    const timeoutCallback = useCallback(setValue, [setValue])
 
     useEffect(() => {
         if(value === triggeredValue) return
         setTriggeredValue(value)
-    }, [value])
+    }, [value, triggeredValue])
 
     useEffect(() => {
         if(triggeredValue === value) return
@@ -21,6 +21,6 @@ export default function useTimeoutEventHandler(value = defaultValue, setValue = 
         return () => {
             clearTimeout(timeoutRef.current)
         }
-    }, [triggeredValue])
+    }, [triggeredValue, delay, value, timeoutCallback])
     return [triggeredValue, triggerFunction]
 }

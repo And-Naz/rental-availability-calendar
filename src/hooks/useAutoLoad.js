@@ -1,4 +1,4 @@
-import { useLayoutEffect, useMemo, useState } from "react"
+import { useLayoutEffect, useMemo, useRef, useState } from "react"
 import {UrlParameters} from "../helpers/UrlHelper"
 import {autoLoad} from "../api"
 import GenerateItemList from "../helpers/GenerateItemList";
@@ -38,9 +38,13 @@ function useAutoLoad(setData, filter, callback) {
     const [isAutoLoaded, setIsAutoLoaded] = useState(false)
     const urlParams = useMemo(() => UrlParameters(), [])
     const dispatch = useDispatch()
+    const paramsRef = useRef();
+
+    paramsRef.current = { callback, dispatch, filter, setData }
+    
     useLayoutEffect(() => {
         if (isNeedAutoLoaded) {
-            AutoLoad(urlParams, filter, dispatch, setIsNeedAutoLoaded, setIsAutoLoaded, setData, callback)
+            AutoLoad(urlParams, paramsRef.current.filter, paramsRef.current.dispatch, setIsNeedAutoLoaded, setIsAutoLoaded, paramsRef.current.setData, paramsRef.current.callback)
         }
     }, [isNeedAutoLoaded, urlParams])
     return isAutoLoaded

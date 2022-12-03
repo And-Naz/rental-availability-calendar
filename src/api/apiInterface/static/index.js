@@ -67,8 +67,7 @@ const staticObject = {
 		}, {})
 	},
 	helpers: {
-		getOrderInfoOfItems: async function(filter, items) {//(startDate, endDate, radioValue, selectedList) {
-			const params = { startDateStr: '', endDateStr: '', allowShipped: false, allowNotShipped: false, allOpened: false, itemInfoList: []}
+		getOrderInfoOfItems: async function(filter, items) {
 			const orders = items.reduce((acc, itemsInfo) => {
 				const itemOrders = ByOrders.filter(ord => {
 					if(ord.Status !== filter.orderStatus) {return false}

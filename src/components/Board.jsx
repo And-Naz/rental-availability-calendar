@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import FilterModal from './FilterModal';
 import BoardHeader from './BoardHeader'
 import BoardBody from './BoardBody';

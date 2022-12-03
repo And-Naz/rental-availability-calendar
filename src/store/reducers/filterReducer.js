@@ -21,9 +21,9 @@ const filterReducer = (state = defaultState, action = defaultAction) => {
             newState_start.isProcessButtonDisable = false
             try {
                 const difDays_startChanged = Date.$GetDateDifferenceByDay(newState_start.startDate, newState_start.endDate)
-                if (difDays_startChanged > 31) {
+                if (difDays_startChanged > 366) {
                     newState_start.isProcessButtonDisable = true
-                    alert("Start Date can't be less than 31 from End Date")
+                    alert("Start Date can't be less than 1 year from End Date")
                 }
             } catch (error) {
                 newState_start.isProcessButtonDisable = true
@@ -37,9 +37,9 @@ const filterReducer = (state = defaultState, action = defaultAction) => {
             newState_end.isProcessButtonDisable = false
             try {
                 const difDays_endChanged = Date.$GetDateDifferenceByDay(newState_end.startDate, newState_end.endDate)
-                if (difDays_endChanged > 31) {
+                if (difDays_endChanged > 366) {
                     newState_end.isProcessButtonDisable = true
-                    alert("End Date can't be more than 31 from Start Date")
+                    alert("End Date can't be more than 1 year from Start Date")
                 }
             } catch (error) {
                 newState_end.isProcessButtonDisable = true

@@ -1,5 +1,5 @@
 import useRequestApi from '../hooks/useRequestApi';
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback } from 'react';
 import PaginatedList from "./uiKits/PaginatedList"
 import { InProcess } from "../constants/StatusesOfRequest"
 import { useDispatch } from "react-redux"
@@ -12,16 +12,21 @@ import {
 	actionAddItemInSelectedRecords, actionRemoveItemFromSelectedRecords,
 	actionAddSerialInSelectedRecords, actionRemoveSerialFromSelectedRecords
 } from "../store/ReduxActions";
-function ByItemsList(props) {
+function ByItemsList() {
 	const dispatch = useDispatch()
 	const steps = 50;
 	const [chuncks, setChuncks] = useState([0, 49])
 	const goToPage = useCallback(page => setChuncks([steps * page, (steps * (page + 1)) - 1]), [])
-	const { records, status, errorStack, getTotalCount, load } = useRequestApi(chuncks)
+	const { records, status, getTotalCount, load } = useRequestApi(chuncks)
 	const [activeItem, setActiveItem] = useState(null)
 	const [activeSerial, setActiveSerial] = useState(null)
 	useUpdateEffect(() => { load(chuncks) }, [chuncks])
-	const serials = useFindAndMutateFromArray(records, d => (d.InventoryCD === activeItem && d.IsSerial), d => { return d ? d.SerialsInfo : [] }, [records, activeItem])
+	const serials = useFindAndMutateFromArray(
+		records,
+		d => (d.InventoryCD === activeItem && d.IsSerial),
+		d => { return d ? d.SerialsInfo : [] },
+		[records, activeItem]
+	)
 	const { checkItem, checkSerial } = useIsRecordSelected()
 	const onItemsListClick = useCallback(e => {
 		let checkInState = false
@@ -45,7 +50,7 @@ function ByItemsList(props) {
 				dispatch(actionRemoveItemFromSelectedRecords({ selectBy: ItemsType, data: rec }))
 			}
 		}
-	}, [])
+	}, [dispatch])
 	const onSerialsListClick = useCallback(e => {
 		let checkInState = false
 		let value = null
@@ -68,7 +73,7 @@ function ByItemsList(props) {
 				dispatch(actionRemoveSerialFromSelectedRecords({ selectBy: ItemsType, data: rec, item: activeItem }))
 			}
 		}
-	}, [activeItem, activeSerial])
+	}, [activeItem, dispatch])
 	const isItemChecked = useCallback((itemValue) => checkItem(itemValue), [checkItem])
 	const isSerialChecked = useCallback((serialValue) => checkSerial(serialValue, activeItem), [checkSerial, activeItem])
 	const selectAllItems = useCallback((e) => {
@@ -81,7 +86,7 @@ function ByItemsList(props) {
 				dispatch(actionRemoveItemFromSelectedRecords({ selectBy: ItemsType, data: l.InventoryCD }))
 			})
 		}
-	}, [records])
+	}, [records, dispatch])
 	const selectAllSerials = useCallback((e) => {
 		if (e.target.checked) {
 			serials.forEach(s => {
@@ -92,7 +97,7 @@ function ByItemsList(props) {
 				dispatch(actionRemoveSerialFromSelectedRecords({ selectBy: ItemsType, data: s.SerialNbr, item: activeItem }))
 			})
 		}
-	}, [serials, activeItem])
+	}, [serials, activeItem, dispatch])
 	const isAllItemsSelected = useIsAllSelected(records)
 	const isAllSerialsSelected = useIsAllSelected(serials, selected => {
 		return selected

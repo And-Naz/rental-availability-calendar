@@ -1,4 +1,3 @@
-import {Children} from "react"
 import InfoCell from './InfoCell'
 function InfoRow(props) {
     const {startText, displayList} = props

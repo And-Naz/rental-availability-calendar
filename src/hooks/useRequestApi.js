@@ -11,7 +11,7 @@ function useRequestApi(defaultChuncks = [0, 99]) {
 	const filter = useSelector(getFilter)
 	const records = useSelector(getCurrentRecords)
 	const [initApi] = useState(new Request(apiInterFace, filter))
-	const api = useMemo(() => initApi.Update(filter), [filter])
+	const api = useMemo(() => initApi.Update(filter), [initApi, filter])
 	const [status, setStatus] = useState(api.Status)
 	const [chuncks, setChunck] = useState(defaultChuncks)
 	const getErrorStack = () => api.ErrorsStack
@@ -19,13 +19,13 @@ function useRequestApi(defaultChuncks = [0, 99]) {
 	const load = useCallback((_chuncks) => setChunck(_chuncks), [])
 	useEffect(() => {
 		dispatch(actionSetCurrentRecords(api.Load(...chuncks)))
-	}, [chuncks, filter])
+	}, [api, dispatch, chuncks, filter])
 	useEffect(() => {
 		if (plugRef.current) {
 			plugRef.current = false
 			dispatch(actionSetCurrentRecordsSync([]))	
 		}
-	}, [])
+	}, [dispatch])
 	useEffect(() => { setStatus(api.Status) }, [api.Status, chuncks, filter])
 	return {
 		records: plugRef.current ? [] : records,

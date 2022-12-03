@@ -9,7 +9,7 @@ export default function SelectBy() {
 	const dispatch = useDispatch()
 	const onChange = useCallback(e => {
 		dispatch(actionSetCalendarType(Number(e.target.value)))
-	}, [])
+	}, [dispatch])
 	const list = useMemo(() => [{ value: FILTER_DATE_TYPE.WEEK, desc: "Weeks" }, { value: FILTER_DATE_TYPE.MONTH, desc: "Month" }], [])
 	return (
 		<SelectOption value={value} onChange={onChange} list={list} label="Calendar Date Type" />

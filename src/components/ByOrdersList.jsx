@@ -13,7 +13,7 @@ import {
 	actionAddItemInSelectedRecords, actionRemoveItemFromSelectedRecords,
 	actionAddSerialInSelectedRecords, actionRemoveSerialFromSelectedRecords, actionSetCurrentRecords
 } from "../store/ReduxActions";
-function ByOrdersList(props) {
+function ByOrdersList() {
 	const dispatch = useDispatch()
 	const steps = 50;
 	const [chuncks, setChuncks] = useState([0, 49])
@@ -23,8 +23,18 @@ function ByOrdersList(props) {
 	const [activeItem, setActiveItem] = useState(null)
 	const [activeSerial, setActiveSerial] = useState(null)
 	useUpdateEffect(() => { load(chuncks) }, [chuncks])
-	const lines = useFindAndMutateFromArray(records, d => (d.OrderNbr === activeOrder), d => { return d ? d.Lines : [] }, [records, activeOrder])
-	const serials = useFindAndMutateFromArray(lines, d => (d.LineNbr.toString() === activeItem && d.IsSerial), d => { return d ? d.SerialsInfo : [] }, [lines, activeItem])
+	const lines = useFindAndMutateFromArray(
+		records,
+		d => (d.OrderNbr === activeOrder),
+		d => { return d ? d.Lines : [] },
+		[records, activeOrder]
+	)
+	const serials = useFindAndMutateFromArray(
+		lines,
+		d => (d.LineNbr.toString() === activeItem && d.IsSerial),
+		d => { return d ? d.SerialsInfo : [] },
+		[lines, activeItem]
+	)
 	const { checkOrder, checkItem, checkSerial } = useIsRecordSelected()
 	const onOrdersListClick = useCallback(e => {
 		let checkInState = false
@@ -48,7 +58,7 @@ function ByOrdersList(props) {
 				dispatch(actionRemoveOrderFromSelectedRecords(rec))
 			}
 		}
-	}, [records, dispatch])
+	}, [dispatch])
 	const onItemsListClick = useCallback(e => {
 		let checkInState = false
 		let value = null
@@ -94,7 +104,7 @@ function ByOrdersList(props) {
 				dispatch(actionRemoveSerialFromSelectedRecords({ selectBy: OrdersType, data: rec, order: activeOrder, item: activeItem }))
 			}
 		}
-	}, [activeOrder, activeItem, activeSerial, dispatch])
+	}, [activeOrder, activeItem, dispatch])
 	const isOrderChecked = useCallback((orderValue) => checkOrder(orderValue), [checkOrder])
 	const isItemChecked = useCallback((itemValue) => checkItem(itemValue, activeOrder), [checkItem, activeOrder])
 	const isSerialChecked = useCallback((serialValue) => checkSerial(serialValue, activeItem, activeOrder), [checkSerial, activeOrder, activeItem])

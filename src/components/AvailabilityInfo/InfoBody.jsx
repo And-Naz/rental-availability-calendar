@@ -1,4 +1,3 @@
-import { useMemo } from 'react';
 import InfoRow from './InfoRow';
 import DisplayInfo from './DisplayInfo';
 function InfoBody(props) {

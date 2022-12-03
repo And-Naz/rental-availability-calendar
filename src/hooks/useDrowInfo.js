@@ -1,5 +1,5 @@
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {useDispatch, useSelector} from "react-redux"
 import {actionSetFilter} from "../store/ReduxActions"
 import {OrdersType} from "../constants/SelectBy";
@@ -58,15 +58,17 @@ function useDrowInfo(openFilter) {
                 setData(list)
             })
         }
-    }, [selected])
+    }, [selected, filter, selectBy])
     const onClear = useCallback(() => {
         setData([])
         dispatch(actionSetFilter())
-    }, [])
+    }, [dispatch])
     useEffect(() => {
         setData([])
     }, [selectBy, selected])
-    const isAutoLoaded = useAutoLoad(setData, filter, () => openFilter(false))
+
+    useAutoLoad(setData, filter, () => openFilter(false))
+    
     return {
         data,
         onProcess,

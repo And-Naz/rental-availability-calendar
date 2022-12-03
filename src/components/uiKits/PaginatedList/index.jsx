@@ -15,7 +15,7 @@ function PaginatedList({
 		setCurrentRecords(records);
 		setPageCount(pages);
 	}, [records, pages]);
-	const handlePageClick = useCallback((event) => { goToPage(event.selected) }, []);
+	const handlePageClick = useCallback((event) => { goToPage(event.selected) }, [goToPage]);
 	return (
 		<div className="list">
 			<div className="list__select_all">
