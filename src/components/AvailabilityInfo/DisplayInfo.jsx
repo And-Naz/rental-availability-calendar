@@ -3,8 +3,8 @@ import {useSelector} from 'react-redux'
 const getShowOnlyAvailable = state => state.options.showOnlyAvailable
 function DisplayInfo({dateRange, item}) {
     const showOnlyAvailable = useSelector(getShowOnlyAvailable)
-    const columnDateStart = dateRange[0].$formatDate('YYYY-MM-DD')
-    const columnDateEnd = dateRange[dateRange.length - 1].$formatDate('YYYY-MM-DD')
+    const columnDateStart = dateRange && dateRange.at(0) ? dateRange.at(0).$formatDate('YYYY-MM-DD') : 'YYYY-MM-DD';
+    const columnDateEnd = dateRange && dateRange.at(-1) ? dateRange.at(-1).$formatDate('YYYY-MM-DD') : 'YYYY-MM-DD';
     const filtredArray = item.info.filter(info => (columnDateStart >=  info.StartDateTime && columnDateEnd <=  info.EndDateTime));
     const [isSerial, setIsSerial] = useState(item.IsSerial)
     const [isAvailable, setIsAvailable] = useState(item.AvailQty > 0)
